@@ -1,15 +1,18 @@
-import { StyleSheet } from 'react-native'
 import { GetProps, Input, SizableText, styled } from 'tamagui'
 
 export const Label = styled(SizableText, {
-  fontSize: 14,
+  fontSize: '$true',
   color: '$color.gray_100',
   fontWeight: '$2',
   lineHeight: '$2',
 
+  pressStyle: {
+    opacity: 0.5,
+  },
+
   focusStyle: {
-    fontWeight: '$2',
     color: '$color.primary',
+    opacity: 1,
   },
 })
 
@@ -18,12 +21,14 @@ export type LabelProps = GetProps<typeof Label>
 export const StyledInput = styled(Input, {
   unstyled: true, // Reset Tamagui Input component style
   backgroundColor: '$color.transparent',
+  focusable: true,
+  pressStyle: {},
 
   variants: {
     hasLabel: {
       true: {
         paddingVertical: 5,
-        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomWidth: 0.5,
         borderBottomColor: '$color.input_border',
         fontWeight: '$2',
         fontSize: '$2',
