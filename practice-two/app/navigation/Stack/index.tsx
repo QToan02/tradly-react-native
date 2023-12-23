@@ -6,6 +6,7 @@ import {
   Browse,
   Cart,
   CategoryDetail,
+  CreateStore,
   Dashboard,
   Login,
   Onboarding,
@@ -32,6 +33,7 @@ export type RootStackParamList = {
   AddCard: undefined
   Payment: undefined
   OrderDetail: { id: string } // ID of the order
+  CreateStore: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()

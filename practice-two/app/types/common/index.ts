@@ -1,12 +1,13 @@
 import { ImageProps, ImageSourcePropType } from 'react-native'
 
 import { IUserForms } from '../users'
+import { IStoreForms } from '../stores'
 
 export interface IInputSearch {
   search: string
 }
 
-export interface IForm extends IInputSearch, IUserForms {}
+export interface IForm extends IInputSearch, IUserForms, IStoreForms {}
 
 export type TButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'quaternary'
 
