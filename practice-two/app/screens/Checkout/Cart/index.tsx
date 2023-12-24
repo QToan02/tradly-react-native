@@ -50,17 +50,27 @@ const Cart = ({ navigation }: CartScreenProps) => {
         </YStack>
       )
 
-    return cart.map(({ id, img, name, price, discountPrice, quantity }: ICart) => (
-      <CartItem
-        key={id}
-        image={{ uri: img }}
-        name={name}
-        price={price}
-        discountPrice={discountPrice}
-        quantity={quantity}
-      />
-    ))
-  }, [cart, isHydratedCart])
+    return (
+      <YStack marginTop="$space.2.5" marginBottom="$space.10">
+        {cart.map(({ id, img, name, price, discountPrice, quantity }: ICart) => (
+          <CartItem
+            key={id}
+            image={{ uri: img }}
+            name={name}
+            price={price}
+            discountPrice={discountPrice}
+            quantity={quantity}
+          />
+        ))}
+        <Button
+          title="remove"
+          variant="quaternary"
+          color="$color.gray_50"
+          onPress={handleChangeAddress}
+        />
+      </YStack>
+    )
+  }, [cart, handleChangeAddress, isHydratedCart])
 
   return (
     <>
@@ -68,18 +78,14 @@ const Cart = ({ navigation }: CartScreenProps) => {
         {renderAddress || (
           <Button title="+ add new address" variant="quaternary" onPress={handleChangeAddress} />
         )}
-        <YStack marginTop="$space.2.5" marginBottom="$space.10">
-          {renderCartList}
-          <Button
-            title="remove"
-            variant="quaternary"
-            color="$color.gray_50"
-            onPress={handleChangeAddress}
-          />
-        </YStack>
-        <Price data={cart} deliveryFee={1.5} />
+        {renderCartList}
+        {!!cart.length && <Price data={cart} deliveryFee={1.5} />}
       </ScrollView>
-      <TabBar title="Continue to Payment" onPress={handleNavigateAddCard} />
+      <TabBar
+        title="Continue to Payment"
+        isDisable={!cart.length}
+        onPress={handleNavigateAddCard}
+      />
     </>
   )
 }
