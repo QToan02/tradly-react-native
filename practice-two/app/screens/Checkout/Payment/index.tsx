@@ -20,8 +20,11 @@ const Payment = ({ navigation }: PaymentScreenProps) => {
   const cart = useCartStore((state) => state.cart)
   const user = useAuthStore((state) => state.user)
   const { mutate, data, isSuccess } = useOrderProduct(process.env.ORDER_ENDPOINT)
-  const [address, setCard] = useOrderStore(useShallow((state) => [state.address, state.setCard]))
+  const [address, setCard, setPaymentMethod] = useOrderStore(
+    useShallow((state) => [state.address, state.setCard, state.setPaymentMethod])
+  )
   const [selectedCard, setSelectedCard] = useState<string>('')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<boolean>(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleChangeAddress = useCallback(() => navigation.navigate('AddCard'), [])
   const numberOfCards = useRef<number>(CHECKOUT.CARDS.length)
@@ -42,6 +45,7 @@ const Payment = ({ navigation }: PaymentScreenProps) => {
   const handleCardSelected = useCallback((card: ICardBase) => {
     setSelectedCard(card.number)
     setCard(card)
+    setSelectedPaymentMethod(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleAddCard = useCallback(() => navigation.navigate('AddCard'), [navigation])
@@ -82,6 +86,21 @@ const Payment = ({ navigation }: PaymentScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart, user])
 
+  const handleSetPaymentMethod = useCallback(
+    (value: string) => {
+      setSelectedPaymentMethod(() => {
+        if (value !== 'Debit / Credit Card') return true
+
+        if (!selectedCard.length) return false
+
+        return true
+      })
+      setPaymentMethod(value)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedCard]
+  )
+
   useEffect(() => {
     if (!isSuccess) return
     navigation.navigate('OrderDetail', { id: String(data.id) })
@@ -103,7 +122,11 @@ const Payment = ({ navigation }: PaymentScreenProps) => {
               {renderPagerIndex}
             </XStack>
           </YStack>
-          <Radio radioList={PAYMENT_METHODS} backgroundColor="$color.white" />
+          <Radio
+            radioList={PAYMENT_METHODS}
+            backgroundColor="$color.white"
+            onChangeValue={handleSetPaymentMethod}
+          />
           <Address
             name={address?.name || 'Deliver to Tradly Team, 75119'}
             streetAddress={address?.streetAddress || 'Kualalumpur, Malaysia'}
@@ -112,7 +135,7 @@ const Payment = ({ navigation }: PaymentScreenProps) => {
           <Price data={cart} deliveryFee={1.5} />
         </YStack>
       </ScrollView>
-      <TabBar title="Checkout" onPress={handleCheckout} />
+      <TabBar title="Checkout" isDisable={!selectedPaymentMethod} onPress={handleCheckout} />
     </>
   )
 }

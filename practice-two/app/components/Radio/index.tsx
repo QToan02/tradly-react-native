@@ -8,11 +8,18 @@ import styles, { StyledIndicator, StyledItem } from './styles'
 
 export type RadioProps = RadioGroupProps & {
   radioList: IRadioItem[]
+  onChangeValue?: (value: string) => void
 }
 
-const Radio = ({ radioList, ...rest }: RadioProps) => {
+const Radio = ({ radioList, onChangeValue, ...rest }: RadioProps) => {
   const [selectedItem, setSelectedItem] = useState<string>()
-  const handleSelectedRadio = useCallback((value: string): void => setSelectedItem(value), [])
+  const handleSelectedRadio = useCallback(
+    (value: string): void => {
+      if (onChangeValue) onChangeValue(value)
+      setSelectedItem(value)
+    },
+    [onChangeValue]
+  )
   const renderList = useMemo(() => {
     return radioList.map(({ id, name }: IRadioItem, index: number) => (
       <YStack>
