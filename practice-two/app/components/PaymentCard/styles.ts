@@ -2,6 +2,7 @@ import { GetProps, styled } from 'tamagui'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 
 import Paragraph from '@components/Paragraph'
+import { COLORS } from '@constants'
 
 export const StyledImageBackground = styled(ImageBackground, {
   name: 'ImageBackground',
@@ -47,7 +48,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2, // '$space.1'
     borderRadius: 10, // '$radius.5'
-    borderColor: '$color.gray_300', // '$color.gray_300'
+    borderColor: COLORS.GRAY_300, // '$color.gray_300'
     borderStyle: 'dashed',
   },
 })
