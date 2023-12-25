@@ -1,18 +1,28 @@
 import { useCallback, useMemo } from 'react'
 import { Image } from 'react-native'
 import { ScrollView, YStack } from 'tamagui'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-
 import { RootStackParamList } from '@navigation/Stack'
+
+import { TabParamsList } from '@navigation/Tab'
 import { Button, Heading } from '@components'
 
 import styles from './styles'
 
-export type StoreHomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Store'>
+export type StoreHomeScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<TabParamsList, 'ProductTab'>,
+  NativeStackScreenProps<RootStackParamList>
+>
 
 const StoreHome = ({ navigation }: StoreHomeScreenProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleMoveToCreateStore = useCallback(() => navigation.navigate('CreateStore'), [])
+  const handleMoveToCreateStore = useCallback(
+    () => navigation.navigate('StoreStack', { screen: 'CreateStore' }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
   const HeaderView = useMemo(
     () => (
       <YStack marginVertical="$space.7" alignItems="center" space="$space.5">

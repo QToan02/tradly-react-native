@@ -1,13 +1,12 @@
 import { NativeStackHeaderProps, createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NavigatorScreenParams } from '@react-navigation/native'
 
 import {
   AddAddress,
   AddCard,
-  Browse,
   Cart,
   CategoryDetail,
   CreateStore,
-  Dashboard,
   Login,
   Onboarding,
   OrderDetail,
@@ -15,11 +14,45 @@ import {
   ProductDetail,
   SignUp,
 } from '@screens'
-import { BrowseBar, CategoryBar, CheckoutBar, HomeBar } from '@components'
+import { CategoryBar, BackBar } from '@components'
 import { COLORS } from '@constants'
+import BottomNav, { TabParamsList } from '@navigation/Tab'
+
+type HomeStackParamsList = {
+  Home: undefined
+  CategoryDetail: { id: string; name: string } // ID of the corresponding category
+  ProductDetail: { id: string } // ID of the product
+  Cart: undefined
+  AddAddress: undefined
+  AddCard: undefined
+  Payment: undefined
+  OrderDetail: { id: string } // ID of the order
+}
+
+type BrowseStackParamsList = {
+  Browse: { search: string } | undefined
+  Cart: undefined
+  AddAddress: undefined
+  AddCard: undefined
+  Payment: undefined
+  OrderDetail: { id: string } // ID of the order
+}
+
+type StoreStackParamsList = {
+  Store: undefined
+  CreateStore: undefined
+  Cart: undefined
+  AddAddress: undefined
+  AddCard: undefined
+  Payment: undefined
+  OrderDetail: { id: string } // ID of the order
+}
 
 export type RootStackParamList = {
-  Tabs: undefined
+  Tabs: NavigatorScreenParams<TabParamsList>
+  HomeStack: NavigatorScreenParams<HomeStackParamsList>
+  BrowseStack: NavigatorScreenParams<BrowseStackParamsList>
+  StoreStack: NavigatorScreenParams<StoreStackParamsList>
   Home: undefined
   Browse: { search: string } | undefined // Search keyword
   Onboarding: undefined
@@ -33,8 +66,9 @@ export type RootStackParamList = {
   AddCard: undefined
   Payment: undefined
   OrderDetail: { id: string } // ID of the order
+  Store: undefined
   CreateStore: undefined
-}
+} & TabParamsList
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const CustomHeader = (Element: React.JSX.ElementType, props: NativeStackHeaderProps) => (
@@ -59,16 +93,10 @@ const PublicStackNavigator = () => (
   </Stack.Navigator>
 )
 
-const PrivateStackNavigator = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
-  </Stack.Navigator>
-)
-
 const CheckOutStack = (
   <Stack.Group
     screenOptions={{
-      header: (props: NativeStackHeaderProps) => CustomHeader(CheckoutBar, props),
+      header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
     }}
   >
     <Stack.Screen name="Cart" component={Cart} options={{ headerTitle: 'my cart' }} />
@@ -89,14 +117,6 @@ const CheckOutStack = (
 
 const HomeStack = () => (
   <Stack.Navigator>
-    <Stack.Screen
-      name="Home"
-      component={Dashboard}
-      options={{
-        headerTitle: 'Groceries',
-        header: (props: NativeStackHeaderProps) => CustomHeader(HomeBar, props),
-      }}
-    />
     <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
     <Stack.Screen
       name="CategoryDetail"
@@ -109,17 +129,32 @@ const HomeStack = () => (
   </Stack.Navigator>
 )
 
-const BrowseStack = () => (
-  <Stack.Navigator>
+const BrowseStack = () => <Stack.Navigator>{CheckOutStack}</Stack.Navigator>
+
+const StoreManagementStack = (
+  <Stack.Group
+    screenOptions={{
+      header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
+    }}
+  >
     <Stack.Screen
-      name="Browse"
-      component={Browse}
-      options={{
-        header: (props: NativeStackHeaderProps) => CustomHeader(BrowseBar, props),
-      }}
+      name="CreateStore"
+      component={CreateStore}
+      options={{ headerTitle: 'my store' }}
     />
     {CheckOutStack}
+  </Stack.Group>
+)
+
+const StoreStack = () => <Stack.Navigator>{StoreManagementStack}</Stack.Navigator>
+
+const PrivateStackNavigator = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Tabs" component={BottomNav} />
+    <Stack.Screen name="HomeStack" component={HomeStack} />
+    <Stack.Screen name="BrowseStack" component={BrowseStack} />
+    <Stack.Screen name="StoreStack" component={StoreStack} />
   </Stack.Navigator>
 )
 
-export default { PrivateStackNavigator, PublicStackNavigator, HomeStack, BrowseStack }
+export default { PrivateStackNavigator, PublicStackNavigator, HomeStack, BrowseStack, StoreStack }

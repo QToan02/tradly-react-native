@@ -13,8 +13,11 @@ import { IIconList } from '@types'
 import styles from './styles'
 
 const BrowseBar = ({ navigation, options, route }: NativeStackHeaderProps) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleNavigateToCart = useCallback(() => navigation.navigate('Cart'), [])
+  const handleNavigateToCart = useCallback(
+    () => navigation.navigate('BrowseStack', { screen: 'Cart' }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
   const handlePress = () => {
     throw new Error('Function not implemented.')
   }
