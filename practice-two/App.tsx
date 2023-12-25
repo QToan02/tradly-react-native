@@ -98,7 +98,11 @@ const App = () => {
       <TamaguiProvider config={config}>
         <SafeAreaProvider style={styles.container} onLayout={onLayoutRootView}>
           <NavigationContainer linking={linking}>
-            {!user ? <StackNavigation.PublicStackNavigator /> : <BottomNav />}
+            {!user ? (
+              <StackNavigation.PublicStackNavigator />
+            ) : (
+              <StackNavigation.PrivateStackNavigator />
+            )}
           </NavigationContainer>
         </SafeAreaProvider>
       </TamaguiProvider>
