@@ -4,6 +4,7 @@ import { NavigatorScreenParams } from '@react-navigation/native'
 import {
   AddAddress,
   AddCard,
+  AddProduct,
   Cart,
   CategoryDetail,
   CreateStore,
@@ -17,6 +18,12 @@ import {
 import { CategoryBar, BackBar } from '@components'
 import { COLORS } from '@constants'
 import BottomNav, { TabParamsList } from '@navigation/Tab'
+
+type PublicStackParamsList = {
+  Onboarding: undefined
+  Login: undefined
+  SignUp: undefined
+}
 
 type HomeStackParamsList = {
   Home: undefined
@@ -41,6 +48,7 @@ type BrowseStackParamsList = {
 type StoreStackParamsList = {
   Store: undefined
   CreateStore: undefined
+  AddProduct: { id: string } | undefined // Provide ID in the modify mode
   Cart: undefined
   AddAddress: undefined
   AddCard: undefined
@@ -53,22 +61,26 @@ export type RootStackParamList = {
   HomeStack: NavigatorScreenParams<HomeStackParamsList>
   BrowseStack: NavigatorScreenParams<BrowseStackParamsList>
   StoreStack: NavigatorScreenParams<StoreStackParamsList>
-  Home: undefined
-  Browse: { search: string } | undefined // Search keyword
-  Onboarding: undefined
-  Login: undefined
-  SignUp: undefined
-  CategoryDetail: { id: string; name: string } // ID of the corresponding category
-  ProductDetail: { id: string } // ID of the product
-  Wishlist: { id: string } // ID of the current login user
-  Cart: undefined
-  AddAddress: undefined
-  AddCard: undefined
-  Payment: undefined
-  OrderDetail: { id: string } // ID of the order
-  Store: undefined
-  CreateStore: undefined
-} & TabParamsList
+  // Home: undefined
+  // Browse: { search: string } | undefined // Search keyword
+  // Onboarding: undefined
+  // Login: undefined
+  // SignUp: undefined
+  // CategoryDetail: { id: string; name: string } // ID of the corresponding category
+  // ProductDetail: { id: string } // ID of the product
+  // Wishlist: { id: string } // ID of the current login user
+  // Cart: undefined
+  // AddAddress: undefined
+  // AddCard: undefined
+  // Payment: undefined
+  // OrderDetail: { id: string } // ID of the order
+  // Store: undefined
+  // CreateStore: undefined
+} & PublicStackParamsList &
+  HomeStackParamsList &
+  BrowseStackParamsList &
+  StoreStackParamsList &
+  TabParamsList
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 const CustomHeader = (Element: React.JSX.ElementType, props: NativeStackHeaderProps) => (
@@ -142,6 +154,11 @@ const StoreManagementStack = (
       component={CreateStore}
       options={{ headerTitle: 'my store' }}
     />
+    <Stack.Screen
+      name="AddProduct"
+      component={AddProduct}
+      options={{ headerTitle: 'add product' }}
+    />
     {CheckOutStack}
   </Stack.Group>
 )
@@ -157,4 +174,4 @@ const PrivateStackNavigator = () => (
   </Stack.Navigator>
 )
 
-export default { PrivateStackNavigator, PublicStackNavigator, HomeStack, BrowseStack, StoreStack }
+export default { PrivateStackNavigator, PublicStackNavigator }

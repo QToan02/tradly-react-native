@@ -38,3 +38,16 @@ export interface IOrder {
   orderStateId: IOrderStatus['id']
   userId: IUser['id']
 }
+
+export interface IAddProductForm {
+  productName: string
+  productImg: string
+  categoryProduct: string
+  price: number
+  offerPrice: number
+  locationDetails: string
+  productDescription: string
+  condition: string
+  priceType: string
+  additionalDetails: string
+}
