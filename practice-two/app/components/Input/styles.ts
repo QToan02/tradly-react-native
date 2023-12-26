@@ -20,6 +20,7 @@ export type LabelProps = GetProps<typeof Label>
 
 export const StyledInput = styled(Input, {
   unstyled: true, // Reset Tamagui Input component style
+  fontFamily: '$body',
   backgroundColor: '$color.transparent',
   focusable: true,
   pressStyle: {},
