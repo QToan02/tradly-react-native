@@ -22,6 +22,7 @@ const customTokens = createTokens({
     primary: '#33907C',
     secondary: '#fff',
     gray_50: '#4f4f4f',
+    gray_50_alpha_50: '#4f4f4f80',
     gray_100: '#3a2c3c',
     gray_200: '#b7b7b7',
     gray_300: '#00000033',
