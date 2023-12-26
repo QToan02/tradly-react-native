@@ -64,6 +64,13 @@ const CustomButtonFrame = styled(Stack, {
         backgroundColor: '$color.white',
         color: '$color.black',
       },
+
+      outline: {
+        borderWidth: '$space.0.5',
+        borderColor: '$color.primary',
+        backgroundColor: '$color.transparent',
+        color: '$color.primary',
+      },
     },
 
     shrink: {

@@ -1,6 +1,6 @@
 import { memo, useMemo, useRef } from 'react'
 import isEqual from 'react-fast-compare'
-import { getTokens, Circle, SizeTokens } from 'tamagui'
+import { getTokens, Circle, Tokens } from 'tamagui'
 import { ImageStyle, StyleProp } from 'react-native'
 
 import Paragraph from '@components/Paragraph'
@@ -10,7 +10,7 @@ import StyledStack, { StyledImage, StyledImageProps, StyledStackProps } from './
 export type AvatarProps = StyledStackProps & {
   source: StyledImageProps['source']
   name: string
-  size: SizeTokens
+  size?: keyof Tokens['avatar']
 }
 
 const Avatar = ({ source, name, size = 'sm', ...rest }: AvatarProps) => {
