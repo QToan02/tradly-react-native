@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 import { Dimensions, KeyboardAvoidingView, Platform } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ScrollView, XStack } from 'tamagui'
+import { ScrollView, XStack, YStack } from 'tamagui'
 import { useShallow } from 'zustand/react/shallow'
 
 import { RootStackParamList } from '@navigation/Stack'
@@ -43,12 +43,12 @@ const AddCard = ({ navigation }: AddCardScreenProps) => {
 
   return (
     <>
-      <ScrollView flex={1} backgroundColor="$color.white">
+      <ScrollView contentContainerStyle={{ flex: 1 }} backgroundColor="$color.bg_layer">
         <XStack
           paddingHorizontal="$space.6"
+          marginTop="$space.5"
           justifyContent="center"
           alignItems="center"
-          backgroundColor="$color.bg_layer"
           width={Dimensions.get('window').width}
           height={Dimensions.get('window').width / 2}
         >
@@ -59,6 +59,7 @@ const AddCard = ({ navigation }: AddCardScreenProps) => {
             cvc={observeFields.cvc || ''}
             alignSelf="center"
             marginBottom={30}
+            pressStyle={{ opacity: 1 }}
             cardStyle={{
               maxWidth: undefined,
               maxHeight: undefined,
@@ -71,57 +72,59 @@ const AddCard = ({ navigation }: AddCardScreenProps) => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.form}
         >
-          <Input
-            name="number"
-            label="Card Number"
-            control={control}
-            keyboardType="numeric"
-            isShowError
-            rules={{
-              required: 'Card number is require',
-              maxLength: {
-                value: 16,
-                message: "Card number can't be exceed 16 number",
-              },
-              validate: (value) => value[0] === '4' || value[0] === '5' || 'Card number invalid',
-            }}
-          />
-          <Input
-            name="name"
-            control={control}
-            label="Name"
-            rules={{
-              required: 'Name is require',
-            }}
-          />
-          <XStack alignItems="center" space="$space.6">
+          <YStack space="$space.4">
             <Input
-              label="Expires Dates"
-              name="expired"
-              isShowError
+              name="number"
+              label="Card Number"
               control={control}
-              rules={{
-                required: 'Expires Date is require',
-              }}
-              containerStyle={{ flex: 3 }}
-            />
-            <Input
-              label="CVC"
-              name="cvc"
-              control={control}
-              isShowError
               keyboardType="numeric"
-              secureTextEntry
+              isShowError
               rules={{
-                required: 'CVC is require',
+                required: 'Card number is require',
                 maxLength: {
-                  value: 3,
-                  message: 'CVC too long',
+                  value: 16,
+                  message: "Card number can't be exceed 16 number",
                 },
+                validate: (value) => value[0] === '4' || value[0] === '5' || 'Card number invalid',
               }}
-              containerStyle={{ flex: 2 }}
             />
-          </XStack>
+            <Input
+              name="name"
+              control={control}
+              label="Name"
+              rules={{
+                required: 'Name is require',
+              }}
+            />
+            <XStack alignItems="center" space="$space.6">
+              <Input
+                label="Expires Dates"
+                name="expired"
+                isShowError
+                control={control}
+                rules={{
+                  required: 'Expires Date is require',
+                }}
+                containerStyle={{ flex: 3 }}
+              />
+              <Input
+                label="CVC"
+                name="cvc"
+                control={control}
+                isShowError
+                keyboardType="numeric"
+                secureTextEntry
+                rules={{
+                  required: 'CVC is require',
+                  maxLength: {
+                    value: 3,
+                    message: 'CVC too long',
+                  },
+                }}
+                containerStyle={{ flex: 2 }}
+              />
+            </XStack>
+          </YStack>
         </KeyboardAvoidingView>
       </ScrollView>
       <TabBar title="Add Credit Card" onPress={handleSubmit(handleSaveCardInfo)} />
