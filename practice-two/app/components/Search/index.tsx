@@ -38,7 +38,7 @@ const Search = ({ placeholder, ...rest }: SearchProps) => {
         onPress={handlePress}
       >
         <Stack width="$icon.width" height="$icon.height">
-          <Image source={require('@assets/search.png')} resizeMode="cover" />
+          <Image source={require('@assets/search.png')} style={styles.icon} resizeMode="cover" />
         </Stack>
         <Input
           containerStyle={{ flex: 1 }}

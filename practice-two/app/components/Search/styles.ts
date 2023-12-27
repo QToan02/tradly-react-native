@@ -10,6 +10,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingLeft: 0,
   },
+  icon: {
+    tintColor: COLORS.PRIMARY,
+  },
 })
 
 export default styles
