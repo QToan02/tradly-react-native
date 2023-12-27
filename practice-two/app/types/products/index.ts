@@ -39,6 +39,13 @@ export interface IOrder {
   userId: IUser['id']
 }
 
+export type TOrderStatus =
+  | 'order placed'
+  | 'payment confirmed'
+  | 'processed'
+  | 'delivered'
+  | 'cancelled'
+
 export interface IAddProductForm {
   productName: string
   productImg: string
