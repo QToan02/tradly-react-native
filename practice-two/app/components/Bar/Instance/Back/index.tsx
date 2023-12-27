@@ -11,7 +11,7 @@ const BackBar = ({ options, route, navigation }: NativeStackHeaderProps) => {
     <Bar
       title={options.headerTitle?.toString() || route.name}
       align="center"
-      paddingVertical="$space.6"
+      paddingTop="$space.3"
       showBackBtn
       onPressBack={handleGoBack}
     />
