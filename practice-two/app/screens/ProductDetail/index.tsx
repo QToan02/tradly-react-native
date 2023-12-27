@@ -119,11 +119,19 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
       >
         <YStack>
           <StyledImageBackground source={require('@assets/cart/item.png')}>
-            <IconButton icon={require('@assets/back.png')} onPress={handleBackPress} />
-            <XStack alignItems="center" space="$space.1.5">
-              <IconButton icon={require('@assets/share.png')} onPress={handlePress} />
-              <IconButton icon={likeIcon} onPress={handleLikeProduct} />
-              <IconButton icon={require('@assets/more.png')} onPress={handlePress} />
+            <XStack
+              flex={1}
+              justifyContent="space-between"
+              paddingTop="$space.3.5"
+              paddingHorizontal="$space.3"
+              backgroundColor="$color.img_overlay"
+            >
+              <IconButton icon={require('@assets/back.png')} onPress={handleBackPress} />
+              <XStack alignItems="center" space="$space.1.5">
+                <IconButton icon={require('@assets/share.png')} onPress={handlePress} />
+                <IconButton icon={likeIcon} onPress={handleLikeProduct} />
+                <IconButton icon={require('@assets/more.png')} onPress={handlePress} />
+              </XStack>
             </XStack>
           </StyledImageBackground>
           <YStack
