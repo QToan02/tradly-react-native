@@ -14,8 +14,9 @@ import {
   Payment,
   ProductDetail,
   SignUp,
+  StoreProfile,
 } from '@screens'
-import { CategoryBar, BackBar } from '@components'
+import { CategoryBar, BackBar, ProfileBar } from '@components'
 import { COLORS } from '@constants'
 import BottomNav, { TabParamsList } from '@navigation/Tab'
 
@@ -47,6 +48,7 @@ type BrowseStackParamsList = {
 
 type StoreStackParamsList = {
   Store: undefined
+  StoreProfile: undefined
   CreateStore: undefined
   AddProduct: { id: string } | undefined // Provide ID in the modify mode
   Cart: undefined
@@ -183,6 +185,11 @@ const StoreStack = () => (
       name="AddProduct"
       component={AddProduct}
       options={{ headerTitle: 'add product' }}
+    />
+    <Stack.Screen
+      name="StoreProfile"
+      component={StoreProfile}
+      options={{ header: (props: NativeStackHeaderProps) => CustomHeader(ProfileBar, props) }}
     />
     {CheckOutStack}
   </Stack.Navigator>

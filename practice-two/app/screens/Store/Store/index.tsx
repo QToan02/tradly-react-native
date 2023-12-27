@@ -28,6 +28,11 @@ const StoreHome = ({ navigation }: StoreHomeScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+  const handleMoveToStoreDetails = useCallback(
+    () => navigation.navigate('StoreStack', { screen: 'StoreProfile' }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
   const HeaderView = useMemo(
     () => (
       <YStack marginVertical="$space.7" alignItems="center" space="$space.5">
@@ -74,6 +79,7 @@ const StoreHome = ({ navigation }: StoreHomeScreenProps) => {
             paddingHorizontal="$space.5"
             paddingVertical="$space.1.5"
             fontSize={12}
+            onPress={handleMoveToStoreDetails}
           />
         </XStack>
       </YStack>
