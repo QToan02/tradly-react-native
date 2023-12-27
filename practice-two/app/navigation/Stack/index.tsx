@@ -88,7 +88,10 @@ const CustomHeader = (Element: React.JSX.ElementType, props: NativeStackHeaderPr
 )
 
 const PublicStackNavigator = () => (
-  <Stack.Navigator initialRouteName="Onboarding" screenOptions={{ headerShown: false }}>
+  <Stack.Navigator
+    initialRouteName="Onboarding"
+    screenOptions={{ headerShown: false, statusBarColor: COLORS.PRIMARY }}
+  >
     <Stack.Screen name="Onboarding" component={Onboarding} />
     <Stack.Screen name="Login" component={Login} />
     <Stack.Screen
@@ -166,7 +169,7 @@ const StoreManagementStack = (
 const StoreStack = () => <Stack.Navigator>{StoreManagementStack}</Stack.Navigator>
 
 const PrivateStackNavigator = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator screenOptions={{ headerShown: false, statusBarColor: COLORS.PRIMARY }}>
     <Stack.Screen name="Tabs" component={BottomNav} />
     <Stack.Screen name="HomeStack" component={HomeStack} />
     <Stack.Screen name="BrowseStack" component={BrowseStack} />
