@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import isEqual from 'react-fast-compare'
 import { Image, ImageBackgroundProps } from 'react-native'
-import { SizeTokens, Stack, StackProps, YStack } from 'tamagui'
+import { Stack, StackProps, Tokens, YStack } from 'tamagui'
 
 import Avatar, { AvatarProps } from '@components/Avatar'
 import Button from '@components/Button'
@@ -13,7 +13,7 @@ export type StoreCardProps = StackProps &
   Pick<AvatarProps, 'source' | 'name'> & {
     bgImage: ImageBackgroundProps['source']
     btnTitle: string
-    size?: SizeTokens
+    size?: keyof Tokens['avatar']
     onPressBtn?: () => void
   }
 
