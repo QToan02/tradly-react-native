@@ -11,19 +11,23 @@ import styles from './styles'
 export type BarProps = {
   title?: string
   showBackBtn?: boolean
+  showSearchBtn?: boolean
   align?: XStackProps['justifyContent']
   IconList?: ReactNode
   children?: ReactNode
   onPressBack?: () => void
+  onPressSearch?: () => void
 } & YStackProps
 
 const Bar = ({
   title,
   showBackBtn = false,
+  showSearchBtn = false,
   align = 'flex-start',
   IconList,
   children,
   onPressBack,
+  onPressSearch,
   ...rest
 }: BarProps) => {
   const checkProps = title || showBackBtn || IconList
@@ -42,7 +46,7 @@ const Bar = ({
         <XStack space={4} alignItems="center" justifyContent={align}>
           {showBackBtn && (
             <IconButton
-              style={styles.backBtn}
+              style={[styles.absoluteBtn, styles.toLeft]}
               icon={require('@assets/back.png')}
               onPress={onPressBack}
               noBackground
@@ -53,6 +57,14 @@ const Bar = ({
             <XStack space={4} alignItems="center">
               {IconList}
             </XStack>
+          )}
+          {showSearchBtn && (
+            <IconButton
+              style={[styles.absoluteBtn, styles.toRight]}
+              icon={require('@assets/search.png')}
+              onPress={onPressSearch}
+              noBackground
+            />
           )}
         </XStack>
       )}

@@ -10,11 +10,17 @@ const styles = StyleSheet.create({
   title: {
     textTransform: 'capitalize',
   },
-  backBtn: {
+  absoluteBtn: {
     position: 'absolute',
-    left: 0,
     top: 0,
+    bottom: 0,
     zIndex: 1,
+  },
+  toLeft: {
+    left: 0,
+  },
+  toRight: {
+    right: 0,
   },
   itemsContainer: {
     justifyContent: 'space-between',
