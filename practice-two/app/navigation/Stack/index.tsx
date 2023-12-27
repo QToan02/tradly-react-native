@@ -56,11 +56,21 @@ type StoreStackParamsList = {
   OrderDetail: { id: string } // ID of the order
 }
 
+type OrderHistoryStackParamsList = {
+  OrderHistory: undefined
+  Cart: undefined
+  AddAddress: undefined
+  AddCard: undefined
+  Payment: undefined
+  OrderDetail: { id: string } // ID of the order
+}
+
 export type RootStackParamList = {
   Tabs: NavigatorScreenParams<TabParamsList>
   HomeStack: NavigatorScreenParams<HomeStackParamsList>
   BrowseStack: NavigatorScreenParams<BrowseStackParamsList>
   StoreStack: NavigatorScreenParams<StoreStackParamsList>
+  OrderHistoryStack: NavigatorScreenParams<OrderHistoryStackParamsList>
   // Home: undefined
   // Browse: { search: string } | undefined // Search keyword
   // Onboarding: undefined
@@ -80,6 +90,7 @@ export type RootStackParamList = {
   HomeStackParamsList &
   BrowseStackParamsList &
   StoreStackParamsList &
+  OrderHistoryStackParamsList &
   TabParamsList
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -146,8 +157,8 @@ const HomeStack = () => (
 
 const BrowseStack = () => <Stack.Navigator>{CheckOutStack}</Stack.Navigator>
 
-const StoreManagementStack = (
-  <Stack.Group
+const StoreStack = () => (
+  <Stack.Navigator
     screenOptions={{
       header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
     }}
@@ -163,10 +174,18 @@ const StoreManagementStack = (
       options={{ headerTitle: 'add product' }}
     />
     {CheckOutStack}
-  </Stack.Group>
+  </Stack.Navigator>
 )
 
-const StoreStack = () => <Stack.Navigator>{StoreManagementStack}</Stack.Navigator>
+const OrderHistoryStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
+    }}
+  >
+    {CheckOutStack}
+  </Stack.Navigator>
+)
 
 const PrivateStackNavigator = () => (
   <Stack.Navigator screenOptions={{ headerShown: false, statusBarColor: COLORS.PRIMARY }}>
@@ -174,6 +193,7 @@ const PrivateStackNavigator = () => (
     <Stack.Screen name="HomeStack" component={HomeStack} />
     <Stack.Screen name="BrowseStack" component={BrowseStack} />
     <Stack.Screen name="StoreStack" component={StoreStack} />
+    <Stack.Screen name="OrderHistoryStack" component={OrderHistoryStack} />
   </Stack.Navigator>
 )
 
