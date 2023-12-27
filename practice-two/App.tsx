@@ -16,7 +16,7 @@ import * as Notifications from 'expo-notifications'
 import * as ExpoLinking from 'expo-linking'
 
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native'
-import { BottomNav, StackNavigation } from '@navigation'
+import { StackNavigation } from '@navigation'
 import { useAuthStore } from '@stores'
 
 import styles from './App.styles'
