@@ -22,13 +22,12 @@ const Radio = ({ radioList, onChangeValue, ...rest }: RadioProps) => {
   )
   const renderList = useMemo(() => {
     return radioList.map(({ id, name }: IRadioItem, index: number) => (
-      <YStack>
+      <YStack key={id}>
         <XStack
           alignItems="center"
           space="$space.2"
           paddingLeft="$space.3.5"
           paddingVertical="$space.3"
-          key={id}
         >
           <StyledItem
             value={name}
