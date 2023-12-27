@@ -87,8 +87,10 @@ const AddProduct = ({ navigation, route }: AddProductScreenProps) => {
     useCallback(() => {
       if (!route.params) return
 
-      const { id } = route.params
+      navigation.setOptions({ headerTitle: 'edit product' })
+      // const { id } = route.params
       // Call product API
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [route.params])
   )
 
