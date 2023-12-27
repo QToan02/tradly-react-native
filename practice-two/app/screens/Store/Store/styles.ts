@@ -5,6 +5,11 @@ const styles = StyleSheet.create({
     width: 152,
     height: 122,
   },
+  storeAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 50,
+  },
 })
 
 export default styles
