@@ -4,8 +4,8 @@ import { ScrollView, XStack, YStack } from 'tamagui'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '@navigation/Stack'
 
+import { RootStackParamList } from '@navigation/Stack'
 import { TabParamsList } from '@navigation/Tab'
 import { Button, Heading } from '@components'
 
