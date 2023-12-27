@@ -65,12 +65,22 @@ type OrderHistoryStackParamsList = {
   OrderDetail: { id: string } // ID of the order
 }
 
+type ProfileStackParamsList = {
+  Profile: undefined
+  Cart: undefined
+  AddAddress: undefined
+  AddCard: undefined
+  Payment: undefined
+  OrderDetail: { id: string } // ID of the order
+}
+
 export type RootStackParamList = {
   Tabs: NavigatorScreenParams<TabParamsList>
   HomeStack: NavigatorScreenParams<HomeStackParamsList>
   BrowseStack: NavigatorScreenParams<BrowseStackParamsList>
   StoreStack: NavigatorScreenParams<StoreStackParamsList>
   OrderHistoryStack: NavigatorScreenParams<OrderHistoryStackParamsList>
+  ProfileStack: NavigatorScreenParams<ProfileStackParamsList>
   // Home: undefined
   // Browse: { search: string } | undefined // Search keyword
   // Onboarding: undefined
@@ -91,6 +101,7 @@ export type RootStackParamList = {
   BrowseStackParamsList &
   StoreStackParamsList &
   OrderHistoryStackParamsList &
+  ProfileStackParamsList &
   TabParamsList
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -187,6 +198,16 @@ const OrderHistoryStack = () => (
   </Stack.Navigator>
 )
 
+const ProfileStack = () => (
+  <Stack.Navigator
+    screenOptions={{
+      header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
+    }}
+  >
+    {CheckOutStack}
+  </Stack.Navigator>
+)
+
 const PrivateStackNavigator = () => (
   <Stack.Navigator screenOptions={{ headerShown: false, statusBarColor: COLORS.PRIMARY }}>
     <Stack.Screen name="Tabs" component={BottomNav} />
@@ -194,6 +215,7 @@ const PrivateStackNavigator = () => (
     <Stack.Screen name="BrowseStack" component={BrowseStack} />
     <Stack.Screen name="StoreStack" component={StoreStack} />
     <Stack.Screen name="OrderHistoryStack" component={OrderHistoryStack} />
+    <Stack.Screen name="ProfileStack" component={ProfileStack} />
   </Stack.Navigator>
 )
 

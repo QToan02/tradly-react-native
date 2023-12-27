@@ -5,7 +5,7 @@ import { BottomTabHeaderProps, createBottomTabNavigator } from '@react-navigatio
 import { BrowseBar, HomeBar, NormalBar, TabIcon } from '@components'
 import { COLORS } from '@constants'
 
-import { Browse, Dashboard, HomeStore, OrderHistory } from '@screens'
+import { Browse, Dashboard, HomeStore, OrderHistory, Profile } from '@screens'
 import styles from './styles'
 
 export type TabParamsList = {
@@ -92,7 +92,15 @@ const BottomNav = () => {
           header: (props: BottomTabHeaderProps) => CustomHeader(NormalBar, props),
         }}
       />
-      <Tab.Screen name="ProfileTab" component={Fragment} options={{ tabBarLabel: 'Profile' }} />
+      <Tab.Screen
+        name="ProfileTab"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          headerTitle: 'Profile',
+          header: (props: BottomTabHeaderProps) => CustomHeader(NormalBar, props),
+        }}
+      />
     </Tab.Navigator>
   )
 }
