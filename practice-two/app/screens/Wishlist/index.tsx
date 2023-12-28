@@ -1,10 +1,10 @@
-import { Spinner } from 'tamagui'
-import { useCallback } from 'react'
+import { Spinner, YStack } from 'tamagui'
+import { useCallback, useMemo } from 'react'
 import { FlatList, ListRenderItem } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import { RootStackParamList } from '@navigation/Stack'
-import { ProductCard } from '@components'
+import { Heading, Paragraph, ProductCard } from '@components'
 import { useGetWishlist } from '@hooks'
 import { useAuthStore } from '@stores'
 import { IWishlistBase } from '@types'
@@ -15,7 +15,11 @@ export type WishlistScreenProps = NativeStackScreenProps<RootStackParamList, 'Wi
 
 const Wishlist = ({ navigation }: WishlistScreenProps) => {
   const user = useAuthStore((state) => state.user)
-  const { data: wishlists, isSuccess } = useGetWishlist('api/wishlists', String(user?._id))
+  const {
+    data: wishlists,
+    isSuccess,
+    isLoading,
+  } = useGetWishlist('api/wishlists', String(user?._id))
   const handleMoveToProduct = useCallback((id: string) => {
     navigation.navigate('ProductDetail', { id })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,20 +46,47 @@ const Wishlist = ({ navigation }: WishlistScreenProps) => {
     },
     [isSuccess, handleMoveToProduct]
   )
+  const Item = useMemo(() => {
+    if (isLoading) return <Spinner size="large" color="$color.primary" />
+    if (!isSuccess) return null
+    if (!wishlists.length)
+      return (
+        <YStack paddingVertical="$space.4" paddingHorizontal="$space.10">
+          <Heading
+            content="List empty!!!!"
+            color="$color.dark_50"
+            fontWeight="$3"
+            fontSize="$3"
+            textAlign="center"
+          />
+          <Paragraph
+            content="Add your favorites products"
+            color="$color.gray_50"
+            fontSize="$2"
+            fontWeight="$2"
+            textAlign="center"
+          />
+        </YStack>
+      )
 
-  return isSuccess ? (
-    <FlatList
-      keyExtractor={({ _id }: IWishlistBase): string => _id}
-      data={wishlists}
-      renderItem={renderProductItem}
-      numColumns={2}
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-      contentContainerStyle={styles.item}
-      columnWrapperStyle={styles.column}
-    />
-  ) : (
-    <Spinner size="large" color="$color.primary" />
+    return (
+      <FlatList
+        keyExtractor={({ _id }: IWishlistBase): string => _id}
+        data={wishlists}
+        renderItem={renderProductItem}
+        numColumns={2}
+        showsHorizontalScrollIndicator={false}
+        style={styles.container}
+        contentContainerStyle={styles.item}
+        columnWrapperStyle={styles.column}
+      />
+    )
+  }, [isLoading, isSuccess, renderProductItem, wishlists])
+
+  return (
+    <YStack flex={1} backgroundColor="$color.bg_layer">
+      {Item}
+    </YStack>
   )
 }
 
