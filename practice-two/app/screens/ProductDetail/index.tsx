@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useMemo, useEffect } from 'react'
 import { ToastAndroid } from 'react-native'
@@ -24,8 +25,12 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
   const addToCart = useCartStore((state) => state.add)
   const { id } = route.params
   const findProduct: IProduct | undefined = cacheProducts.find((item) => item.id === +id)
+  // const { data: fetchProductData, isSuccess: isFindProductSuccess } = useFindProduct(
+  //   process.env.PRODUCT_ENDPOINT,
+  //   id
+  // )
   const { data: fetchProductData, isSuccess: isFindProductSuccess } = useFindProduct(
-    process.env.PRODUCT_ENDPOINT,
+    'api/product',
     id
   )
   const product = useMemo(() => {
@@ -39,20 +44,13 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
     return fetchProductData
   }, [isFindProductSuccess])
   const { data: wishlist, isSuccess: isGetWishlistSuccess } = useGetWishlist(
-    process.env.WISHLIST_ENDPOINT,
-    String(user?.id)
+    '/api/wishlists',
+    String(user?._id)
   )
-  const { mutate: addToWishList } = useAddToWishlist(
-    process.env.WISHLIST_ENDPOINT,
-    String(user?.id)
-  )
-  const { mutate: deleteFromWishlist } = useDeleteFromWishlist(
-    process.env.WISHLIST_ENDPOINT,
-    String(user?.id)
-  )
+  const { mutate: addToWishList } = useAddToWishlist('/api/wishlist', String(user?._id))
+  const { mutate: deleteFromWishlist } = useDeleteFromWishlist('/api/wishlist', String(user?._id))
   useEffect(() => {
     if (!wishlist) return
-
     setWishlist(wishlist)
   }, [wishlist])
 
@@ -60,7 +58,7 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
     if (!isFindProductSuccess) return false
     if (!isGetWishlistSuccess) return false
 
-    return wishlist.some((item: IWishlistBase) => item.productId === +id)
+    return wishlist.some((item) => item.product === id)
   }, [isFindProductSuccess, isGetWishlistSuccess, wishlist])
 
   const likeIcon = checkProductInWishlist
@@ -72,19 +70,17 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
     if (!isGetWishlistSuccess) return
 
     if (checkProductInWishlist) {
-      const wishlistItem: IWishlistBase | undefined = wishlist.find(
-        (item) => item.productId === +id
-      )
+      const wishlistItem: IWishlistBase | undefined = wishlist.find((item) => item.product === id)
 
       if (!wishlistItem) return
 
-      deleteFromWishlist({ id: wishlistItem.id })
+      deleteFromWishlist({ _id: wishlistItem._id })
       return
     }
 
     addToWishList({
-      productId: Number(id),
-      userId: Number(user.id),
+      product: id,
+      user: user._id,
     })
   }, [user, isGetWishlistSuccess, checkProductInWishlist, id])
 

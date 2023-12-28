@@ -1,12 +1,16 @@
-import { Dimensions, Image } from 'react-native'
+import { useCallback } from 'react'
+import { Dimensions, Image, ToastAndroid } from 'react-native'
 import { Separator, XStack, YStack } from 'tamagui'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { useShallow } from 'zustand/react/shallow'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { RootStackParamList } from '@navigation/Stack'
 import { TabParamsList } from '@navigation/Tab'
 import { Heading, Paragraph } from '@components'
+import { useAuthStore } from '@stores'
 
 import styles from './styles'
 
@@ -16,6 +20,15 @@ export type OrderHistoryScreenProps = CompositeScreenProps<
 >
 
 const Profile = () => {
+  const [user, logout] = useAuthStore(useShallow((state) => [state.user, state.logout]))
+  const handleLogout = useCallback(async () => {
+    await AsyncStorage.removeItem('user', () => {
+      ToastAndroid.show('Hope to see you again soon!', ToastAndroid.LONG)
+      logout()
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <YStack backgroundColor="$color.bg_layer" flex={1}>
       <YStack
@@ -25,11 +38,15 @@ const Profile = () => {
         backgroundColor="$color.primary"
       >
         <XStack space="$space.3.5">
-          <Image source={require('@assets/avatar.png')} style={styles.storeAvatar} />
+          <Image source={{ uri: user?.avatar }} style={styles.storeAvatar} />
           <YStack space="$space.0.5">
-            <Heading content="Tradly Team" fontSize="$1" letterSpacing="$true" />
-            <Paragraph content="+1 9998887776" />
-            <Paragraph content="info@tradly.co" />
+            <Heading
+              content={`${user?.firstName} ${user?.lastName}`}
+              fontSize="$1"
+              letterSpacing="$true"
+            />
+            <Paragraph content={`+84 ${user?.phone}`} />
+            <Paragraph content={`${user?.email}`} />
           </YStack>
         </XStack>
       </YStack>
@@ -86,6 +103,7 @@ const Profile = () => {
         <Separator height="$space.0.5" borderColor="$color.divider" />
         <Paragraph
           content="Logout"
+          onPress={handleLogout}
           paddingVertical="$space.4"
           textAlign="left"
           color="$color.primary"

@@ -27,16 +27,17 @@ const Dashboard = ({ navigation }: HomeScreenProps) => {
   const [cacheProducts, setProducts, cacheStores, setStores] = useCacheStore(
     useShallow((state) => [state.products, state.setProducts, state.stores, state.setStores])
   )
-  const { data: products } = useGetProducts(process.env.PRODUCT_ENDPOINT)
-  const { data: stores } = useGetStores(process.env.STORE_ENDPOINT)
+  // const { data: products } = useGetProducts(process.env.PRODUCT_ENDPOINT)
+  const { data: paginationProducts } = useGetProducts('/api/products')
+  // const { data: stores } = useGetStores(process.env.STORE_ENDPOINT)
+  const { data: stores } = useGetStores('/api/stores')
   useEffect(() => {
-    if (!products) return
+    if (!paginationProducts) return
     if (!stores) return
-
-    setProducts(products)
+    setProducts(paginationProducts.products)
     setStores(stores)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products, stores])
+  }, [paginationProducts, stores])
   const handleSeeAllProducts = useCallback(() => undefined, []) // TODO: Replacing with navigate to another screen
   const handleMoveToCategoryScreen = useCallback(({ id, name }: ICategoryItem) => {
     // navigation.navigate('CategoryDetail', { id, name })
@@ -49,9 +50,9 @@ const Dashboard = ({ navigation }: HomeScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const renderProductItem: ListRenderItem<IProduct> = useCallback(
-    ({ item: { id, img, price, discountPrice, name, store } }) => (
+    ({ item: { _id, img, price, discountPrice, name, store } }) => (
       <ProductCard
-        id={String(id)}
+        id={String(_id)}
         img={{ uri: img }}
         price={price}
         discountPrice={discountPrice}
@@ -97,7 +98,7 @@ const Dashboard = ({ navigation }: HomeScreenProps) => {
           />
         </XStack>
         <FlatList
-          keyExtractor={({ id }: IProduct): string => String(id)}
+          keyExtractor={({ _id }: IProduct): string => String(_id)}
           data={data}
           renderItem={renderProductItem}
           horizontal
@@ -136,8 +137,8 @@ const Dashboard = ({ navigation }: HomeScreenProps) => {
       />
       <YStack marginVertical="$space.3">
         <>
-          {renderProducts('New Product', products || cacheProducts)}
-          {renderProducts('Popular Product', products || cacheProducts)}
+          {renderProducts('New Product', paginationProducts?.products || cacheProducts)}
+          {renderProducts('Popular Product', paginationProducts?.products || cacheProducts)}
         </>
       </YStack>
       <YStack>
@@ -161,7 +162,7 @@ const Dashboard = ({ navigation }: HomeScreenProps) => {
           />
         </XStack>
         <FlatList
-          keyExtractor={({ id }: IStore): string => id}
+          keyExtractor={({ _id }: IStore): string => _id}
           data={stores || cacheStores}
           renderItem={renderStoreItem}
           horizontal

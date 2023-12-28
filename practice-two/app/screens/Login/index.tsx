@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { KeyboardAvoidingView, Platform } from 'react-native'
 import { XStack, YStack } from 'tamagui'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -10,16 +10,14 @@ import { Button, Heading, Input, Paragraph } from '@components'
 import { IForm } from '@types'
 import { COLORS, ERROR_MESSAGES } from '@constants'
 import { useLogin } from '@hooks'
-import { asyncStoreService } from '@services'
-import { useAuthStore } from '@stores'
 
 import styles from './styles'
 
 export type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>
 
 const Login = ({ navigation }: LoginScreenProps) => {
-  const { mutate, data: user, isSuccess } = useLogin(process.env.USER_ENDPOINT)
-  const loginFn = useAuthStore((state) => state.login)
+  // const { mutate, data: user, isSuccess } = useLogin(process.env.USER_ENDPOINT)
+  const { mutate, status } = useLogin('/auth/login')
   const { control, handleSubmit } = useForm<IForm>()
   const onSubmit: SubmitHandler<IForm> = useCallback(({ email, password }: IForm) => {
     mutate({
@@ -28,17 +26,9 @@ const Login = ({ navigation }: LoginScreenProps) => {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const handleSaveUser = useCallback(async () => {
-    if (!isSuccess) return
 
-    await asyncStoreService.save('user', user, () => loginFn(user))
-  }, [isSuccess, loginFn, user])
-
-  useEffect(() => {
-    handleSaveUser()
-  }, [handleSaveUser])
-
-  const handleToSignUpScreen = useCallback(() => navigation.navigate('SignUp'), [navigation])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleToSignUpScreen = useCallback(() => navigation.navigate('SignUp'), [])
   return (
     <SafeAreaView style={styles.container}>
       <YStack space="$space.9" alignItems="center">
@@ -75,6 +65,7 @@ const Login = ({ navigation }: LoginScreenProps) => {
         marginBottom="$space.6"
         title="login"
         variant="secondary"
+        isDisable={status === 'pending'}
         onPress={handleSubmit(onSubmit)}
       />
       <YStack alignItems="center" space="$space.8">

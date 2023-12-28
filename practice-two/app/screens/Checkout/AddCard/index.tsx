@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { Dimensions, KeyboardAvoidingView, Platform } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -16,7 +16,7 @@ import styles from './styles'
 export type AddCardScreenProps = NativeStackScreenProps<RootStackParamList, 'AddCard'>
 const AddCard = ({ navigation }: AddCardScreenProps) => {
   const [isHydrated, user] = useAuthStore(useShallow((state) => [state.isHydrated, state.user]))
-  const { mutate, isSuccess } = useAddCard(process.env.CARD_ENDPOINT)
+  const { mutate, status } = useAddCard('api/card')
   const { control, watch, handleSubmit } = useForm<IForm>()
   const observeFields = watch()
   const handleSaveCardInfo = useCallback(
@@ -25,34 +25,36 @@ const AddCard = ({ navigation }: AddCardScreenProps) => {
       if (!isHydrated) return
       if (!user) return
 
-      mutate({
-        ...data,
-        userId: user.id,
-      })
+      mutate(
+        {
+          ...data,
+          user: user._id,
+        },
+        {
+          onSuccess: () => {
+            navigation.goBack()
+          },
+        }
+      )
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isHydrated, user]
   )
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigation.navigate('Payment')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess])
-
   return (
     <>
-      <ScrollView contentContainerStyle={{ flex: 1 }} backgroundColor="$color.bg_layer">
+      <ScrollView backgroundColor="$color.white">
         <XStack
           paddingHorizontal="$space.6"
           marginTop="$space.5"
           justifyContent="center"
+          backgroundColor="$color.bg_layer"
           alignItems="center"
           width={Dimensions.get('window').width}
           height={Dimensions.get('window').width / 2}
         >
           <PaymentCard
+            _id=""
             name={observeFields.name || ''}
             number={observeFields.number || ''}
             expired={observeFields.expired || ''}
@@ -127,7 +129,11 @@ const AddCard = ({ navigation }: AddCardScreenProps) => {
           </YStack>
         </KeyboardAvoidingView>
       </ScrollView>
-      <TabBar title="Add Credit Card" onPress={handleSubmit(handleSaveCardInfo)} />
+      <TabBar
+        title="Add Credit Card"
+        isDisable={status === 'pending'}
+        onPress={handleSubmit(handleSaveCardInfo)}
+      />
     </>
   )
 }

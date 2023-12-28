@@ -5,42 +5,40 @@ import { ScrollView, Separator, Spinner, XStack, YStack } from 'tamagui'
 
 import { Button, CartItem, Heading, Paragraph, TrackerItem } from '@components'
 import { RootStackParamList } from '@navigation/Stack'
-import { ICart } from '@types'
-import { useFindMultiProduct, useGetOderDetail } from '@hooks'
+import { IProductReturnByOrder } from '@types'
+import { useGetOderDetail } from '@hooks'
 
 export type OrderDetailScreenProps = NativeStackScreenProps<RootStackParamList, 'OrderDetail'>
 
 const OrderDetail = ({ navigation, route }: OrderDetailScreenProps) => {
   const { id } = route.params
-  const { data, isSuccess } = useGetOderDetail(process.env.ORDER_ENDPOINT, id)
-  const products: Partial<ICart>[] = useFindMultiProduct(
-    process.env.PRODUCT_ENDPOINT,
-    data?.productId || [],
-    data?.quantity || []
-  )
+  const { data: orderData, isSuccess } = useGetOderDetail('api/order', id)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleNavigateToHome = useCallback(() => navigation.navigate('Home'), [])
+  const handleNavigateToHome = useCallback(
+    () => navigation.navigate('Tabs', { screen: 'HomeTab' }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
   const renderOrderItem = useMemo(() => {
     if (!isSuccess) return null
 
-    return products.map((item: Partial<ICart>) => {
-      const { id: itemId, img, name, price, discountPrice, quantity } = item
+    return orderData.product.map(
+      ({ _id, name, img, price, discountPrice, quantity }: IProductReturnByOrder) => {
+        if (!_id || !img || !name || !price || !quantity) return null
 
-      if (!itemId || !img || !name || !price || !discountPrice || !quantity) return null
-
-      return (
-        <CartItem
-          key={itemId}
-          image={{ uri: img }}
-          name={name}
-          price={price}
-          discountPrice={discountPrice}
-          quantity={quantity}
-        />
-      )
-    })
-  }, [isSuccess, products])
+        return (
+          <CartItem
+            key={_id}
+            image={{ uri: img }}
+            name={name}
+            price={price}
+            discountPrice={discountPrice}
+            quantity={quantity}
+          />
+        )
+      }
+    )
+  }, [isSuccess, orderData])
 
   return isSuccess ? (
     <ScrollView showsVerticalScrollIndicator={false} backgroundColor="$color.bg_layer">
@@ -66,7 +64,7 @@ const OrderDetail = ({ navigation, route }: OrderDetailScreenProps) => {
             textTransform="capitalize"
           />
           <Paragraph
-            content="Order ID - 123455"
+            content={`Order ID - ${orderData._id}`}
             fontWeight="$2"
             color="$color.gray_400"
             lineHeight="$3"
@@ -76,27 +74,23 @@ const OrderDetail = ({ navigation, route }: OrderDetailScreenProps) => {
         <YStack marginTop="$space.5" marginBottom="$space.3" space="$space.7">
           <TrackerItem
             trackStatus="order placed"
-            description="Order#123455 from Fashion Point"
-            date={new Date('2019-05-08')}
-            time="11:30 AM"
+            description="Order placed success"
+            datetime={orderData.createdAt}
           />
           <TrackerItem
             trackStatus="payment confirmed"
-            description="Payment Confirmed Status"
-            date={new Date('2019-05-08')}
-            time="11:30 AM"
+            description={`Payment confirmed with ${orderData.payment.name} card`}
+            datetime={orderData.createdAt}
           />
           <TrackerItem
             trackStatus="processed"
-            description="Processed Status"
-            date={new Date('2019-05-08')}
-            time="11:30 AM"
+            description="Store is processed your order"
+            datetime={orderData.createdAt}
           />
           <TrackerItem
             trackStatus="delivered"
             description="Delivered Status"
-            date={new Date('2019-05-08')}
-            time="11:30 AM"
+            datetime={orderData.status !== 'delivered' ? '' : orderData.updatedAt}
           />
         </YStack>
       </YStack>
@@ -122,7 +116,7 @@ const OrderDetail = ({ navigation, route }: OrderDetailScreenProps) => {
         <YStack paddingVertical="$space.3" space="$space.2.5">
           <Paragraph content="Tradly team" fontWeight="$2" color="$color.dark_50" lineHeight="$3" />
           <Paragraph
-            content="Flat Number 512, Eden Garden, Rewari"
+            content={`${orderData.address.streetAddress} ${orderData.address.city} ${orderData.address.state}`}
             fontWeight="$2"
             fontSize={12}
             color="$color.gray_400"
@@ -137,7 +131,7 @@ const OrderDetail = ({ navigation, route }: OrderDetailScreenProps) => {
               lineHeight="$3"
             />
             <Paragraph
-              content="9876543210"
+              content={orderData.address.phone}
               fontWeight="$2"
               fontSize={12}
               color="$color.dark_50"
