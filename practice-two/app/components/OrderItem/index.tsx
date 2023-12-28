@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import isEqual from 'react-fast-compare'
 import { ImageSourcePropType } from 'react-native'
 import { XStack, XStackProps, YStack } from 'tamagui'
@@ -15,7 +15,9 @@ export type OrderItemProps = XStackProps & {
   name: string
   price: number
   orderStatus: TOrderStatus
+  _id?: string
   discountPrice?: number
+  onPressOrder?: (params: string) => void
 }
 
 const OrderItem = ({
@@ -23,9 +25,19 @@ const OrderItem = ({
   name,
   price,
   orderStatus,
+  _id,
   discountPrice = 0,
+  onPressOrder,
   ...rest
 }: OrderItemProps) => {
+  const handlePressOrder = useCallback(() => {
+    if (!_id) return undefined
+    if (!onPressOrder) return undefined
+    if (!_id.length) return undefined
+
+    return onPressOrder(_id)
+  }, [_id, onPressOrder])
+
   return (
     <XStack
       padding="$space.3.5"
@@ -34,6 +46,7 @@ const OrderItem = ({
       alignItems="center"
       borderRadius="$radius.true"
       pressStyle={{ opacity: 0.5 }}
+      onPress={handlePressOrder}
       {...rest}
     >
       <XStack space="$space.3.5">
