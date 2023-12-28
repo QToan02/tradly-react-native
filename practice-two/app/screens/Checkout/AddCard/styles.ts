@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingTop: 24,
+    paddingVertical: 24,
     paddingHorizontal: 34,
   },
   cardContainer: {

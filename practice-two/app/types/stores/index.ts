@@ -1,5 +1,6 @@
 export interface IStore {
   id: string
+  _id: string
   name: string
   avatar: string
 }

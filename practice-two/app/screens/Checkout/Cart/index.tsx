@@ -79,7 +79,7 @@ const Cart = ({ navigation }: CartScreenProps) => {
           <Button title="+ add new address" variant="quaternary" onPress={handleChangeAddress} />
         )}
         {renderCartList}
-        {!!cart.length && <Price data={cart} deliveryFee={1.5} />}
+        {!!cart.length && <Price data={cart} deliveryFee={0} />}
       </ScrollView>
       <TabBar
         title="Continue to Payment"

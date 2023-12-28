@@ -1,9 +1,17 @@
-import { IUser } from '../users'
+import { IAddress, ICard, IUser } from '../users'
 import { ICategory } from '../categories'
 import { IStore } from '../stores'
 
+export type TOrderStatus =
+  | 'order placed'
+  | 'payment confirmed'
+  | 'processed'
+  | 'delivered'
+  | 'cancelled'
+
 export interface IProductBase {
   id: number
+  _id: string
   storeId: number
   categoryId: number
   name: string
@@ -26,25 +34,40 @@ export interface IProduct extends IProductBase {
   category: ICategory
 }
 
+export interface IPaginationProduct {
+  currentPage: string
+  totalPages: string
+  totalProducts: string
+  pageSize: string
+  products: IProduct[]
+}
+
 export interface IOrderStatus {
   id: number
   status: string
 }
 
-export interface IOrder {
-  id: number
-  productId: Array<ICart['id']>
+export interface IOrder<T = unknown> {
+  _id: string
+  productId: Array<ICart['_id']>
   quantity: Array<ICart['quantity']>
-  orderStateId: IOrderStatus['id']
-  userId: IUser['id']
+  address: T extends object ? IAddress : string
+  payment: T extends object ? ICard : string
+  total: number
+  user: IUser['_id']
 }
 
-export type TOrderStatus =
-  | 'order placed'
-  | 'payment confirmed'
-  | 'processed'
-  | 'delivered'
-  | 'cancelled'
+export interface IProductReturnByOrder
+  extends Pick<ICart, '_id' | 'name' | 'img' | 'price' | 'discountPrice' | 'quantity'> {}
+
+export interface IOrderReturn<TPopulate = object>
+  extends Omit<IOrder<TPopulate>, 'productId' | 'quantity'> {
+  product: IProductReturnByOrder[]
+  rating: number
+  status: TOrderStatus
+  createdAt: string
+  updatedAt: string
+}
 
 export interface IAddProductForm {
   productName: string

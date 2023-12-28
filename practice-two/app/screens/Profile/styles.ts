@@ -7,6 +7,8 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 50,
+    borderWidth: 1,
+    borderColor: COLORS.WHITE,
   },
   shadow: {
     shadowColor: COLORS.BLACK,
