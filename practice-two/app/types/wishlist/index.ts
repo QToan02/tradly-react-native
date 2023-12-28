@@ -1,8 +1,8 @@
-import { IProductBase } from '../products'
+import { IProduct } from '../products'
 import { IUser } from '../users'
 
-export interface IWishlistBase {
+export interface IWishlistBase<T = object> {
   _id: string
-  product: string
-  user: string
+  product: T extends object ? IProduct : string
+  user: T extends object ? IUser : string
 }

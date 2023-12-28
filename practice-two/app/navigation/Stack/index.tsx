@@ -15,6 +15,7 @@ import {
   ProductDetail,
   SignUp,
   StoreProfile,
+  Wishlist,
 } from '@screens'
 import { CategoryBar, BackBar, ProfileBar } from '@components'
 import { COLORS } from '@constants'
@@ -35,6 +36,7 @@ type HomeStackParamsList = {
   AddCard: undefined
   Payment: undefined
   OrderDetail: { id: string } // ID of the order
+  Wishlist: undefined
 }
 
 type BrowseStackParamsList = {
@@ -44,6 +46,7 @@ type BrowseStackParamsList = {
   AddCard: undefined
   Payment: undefined
   OrderDetail: { id: string } // ID of the order
+  Wishlist: undefined
 }
 
 type StoreStackParamsList = {
@@ -56,6 +59,7 @@ type StoreStackParamsList = {
   AddCard: undefined
   Payment: undefined
   OrderDetail: { id: string } // ID of the order
+  Wishlist: undefined
 }
 
 type OrderHistoryStackParamsList = {
@@ -65,6 +69,7 @@ type OrderHistoryStackParamsList = {
   AddCard: undefined
   Payment: undefined
   OrderDetail: { id: string } // ID of the order
+  Wishlist: undefined
 }
 
 type ProfileStackParamsList = {
@@ -74,6 +79,7 @@ type ProfileStackParamsList = {
   AddCard: undefined
   Payment: undefined
   OrderDetail: { id: string } // ID of the order
+  Wishlist: undefined
 }
 
 export type RootStackParamList = {
@@ -132,12 +138,13 @@ const PublicStackNavigator = () => (
   </Stack.Navigator>
 )
 
-const CheckOutStack = (
+const TabBarStack = (
   <Stack.Group
     screenOptions={{
       header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
     }}
   >
+    <Stack.Screen name="Wishlist" component={Wishlist} options={{ headerTitle: 'wishlist' }} />
     <Stack.Screen name="Cart" component={Cart} options={{ headerTitle: 'my cart' }} />
     <Stack.Screen
       name="AddAddress"
@@ -164,11 +171,11 @@ const HomeStack = () => (
         header: (props: NativeStackHeaderProps) => CustomHeader(CategoryBar, props),
       }}
     />
-    {CheckOutStack}
+    {TabBarStack}
   </Stack.Navigator>
 )
 
-const BrowseStack = () => <Stack.Navigator>{CheckOutStack}</Stack.Navigator>
+const BrowseStack = () => <Stack.Navigator>{TabBarStack}</Stack.Navigator>
 
 const StoreStack = () => (
   <Stack.Navigator
@@ -191,7 +198,7 @@ const StoreStack = () => (
       component={StoreProfile}
       options={{ header: (props: NativeStackHeaderProps) => CustomHeader(ProfileBar, props) }}
     />
-    {CheckOutStack}
+    {TabBarStack}
   </Stack.Navigator>
 )
 
@@ -201,7 +208,7 @@ const OrderHistoryStack = () => (
       header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
     }}
   >
-    {CheckOutStack}
+    {TabBarStack}
   </Stack.Navigator>
 )
 
@@ -211,7 +218,7 @@ const ProfileStack = () => (
       header: (props: NativeStackHeaderProps) => CustomHeader(BackBar, props),
     }}
   >
-    {CheckOutStack}
+    {TabBarStack}
   </Stack.Navigator>
 )
 

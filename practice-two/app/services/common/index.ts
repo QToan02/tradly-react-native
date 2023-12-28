@@ -22,7 +22,10 @@ export const find = async <T>(path: string, options: AxiosRequestConfig = {}): P
   return res.data.data
 }
 
-export const add = async <T>(path: string, options: Partial<T>): Promise<T> => {
+export const add = async <T, TOptions = T>(
+  path: string,
+  options: Partial<TOptions>
+): Promise<T> => {
   const res: AxiosResponse<IReturnResponse<T>> = await request
     .post(path, options)
     .catch((error) => {

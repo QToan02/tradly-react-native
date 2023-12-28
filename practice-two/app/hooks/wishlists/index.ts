@@ -23,12 +23,12 @@ export const useGetWishlist = (
 export const useAddToWishlist = (
   path: string,
   userId: string
-): UseMutationResult<IWishlistBase, Error, Omit<IWishlistBase, '_id'>, unknown> => {
+): UseMutationResult<IWishlistBase, Error, Omit<IWishlistBase<string>, '_id'>, unknown> => {
   const queryClient = useQueryClient()
 
-  return useMutation<IWishlistBase, Error, Omit<IWishlistBase, '_id'>, unknown>({
-    mutationFn: (data: Omit<IWishlistBase, '_id'>): Promise<IWishlistBase> =>
-      add<IWishlistBase>(path, data),
+  return useMutation<IWishlistBase, Error, Omit<IWishlistBase<string>, '_id'>, unknown>({
+    mutationFn: (data: Omit<IWishlistBase<string>, '_id'>): Promise<IWishlistBase> =>
+      add<IWishlistBase, IWishlistBase<string>>(path, data),
     onSuccess: (data: IWishlistBase) => {
       queryClient.setQueryData(['wishlist', userId], (oldData: IWishlistBase[]) =>
         oldData ? [...oldData, data] : oldData

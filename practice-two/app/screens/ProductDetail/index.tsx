@@ -24,7 +24,7 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
   const user = useAuthStore((state) => state.user)
   const addToCart = useCartStore((state) => state.add)
   const { id } = route.params
-  const findProduct: IProduct | undefined = cacheProducts.find((item) => item.id === +id)
+  const findProduct: IProduct | undefined = cacheProducts.find((item) => item._id === id)
   // const { data: fetchProductData, isSuccess: isFindProductSuccess } = useFindProduct(
   //   process.env.PRODUCT_ENDPOINT,
   //   id
@@ -58,7 +58,7 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
     if (!isFindProductSuccess) return false
     if (!isGetWishlistSuccess) return false
 
-    return wishlist.some((item) => item.product === id)
+    return wishlist.some((item) => item.product._id === id)
   }, [isFindProductSuccess, isGetWishlistSuccess, wishlist])
 
   const likeIcon = checkProductInWishlist
@@ -70,7 +70,9 @@ const ProductDetail = ({ navigation, route }: ProductDetailProps) => {
     if (!isGetWishlistSuccess) return
 
     if (checkProductInWishlist) {
-      const wishlistItem: IWishlistBase | undefined = wishlist.find((item) => item.product === id)
+      const wishlistItem: IWishlistBase | undefined = wishlist.find(
+        (item) => item.product._id === id
+      )
 
       if (!wishlistItem) return
 

@@ -10,7 +10,6 @@ export type TOrderStatus =
   | 'cancelled'
 
 export interface IProductBase {
-  id: number
   _id: string
   storeId: number
   categoryId: number
@@ -29,9 +28,9 @@ export interface ICart extends IProductBase {
   quantity: number
 }
 
-export interface IProduct extends IProductBase {
-  store: IStore
-  category: ICategory
+export interface IProduct<T = object> extends IProductBase {
+  store: T extends object ? IStore : string
+  category: T extends object ? ICategory : string
 }
 
 export interface IPaginationProduct {
