@@ -18,6 +18,11 @@ const BrowseBar = ({ navigation, options, route }: NativeStackHeaderProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+  const handleNavigateToWishlist = useCallback(
+    () => navigation.navigate('BrowseStack', { screen: 'Wishlist' }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
   const handlePress = () => {
     throw new Error('Function not implemented.')
   }
@@ -39,11 +44,11 @@ const BrowseBar = ({ navigation, options, route }: NativeStackHeaderProps) => {
       BAR.HOME.map(({ label, ...rest }: IIconList) => (
         <IconButton
           key={label}
-          onPress={label === 'cart' ? handleNavigateToCart : undefined}
+          onPress={label === 'cart' ? handleNavigateToCart : handleNavigateToWishlist}
           {...rest}
         />
       )),
-    [handleNavigateToCart]
+    [handleNavigateToCart, handleNavigateToWishlist]
   )
 
   return (

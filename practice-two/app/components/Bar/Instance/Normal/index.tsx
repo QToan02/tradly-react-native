@@ -12,16 +12,21 @@ const NormalBar = ({ options, route, navigation }: NativeStackHeaderProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
+  const handleNavigateToWishlist = useCallback(
+    () => navigation.navigate('StoreStack', { screen: 'Wishlist' }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
   const IconList = useMemo(
     () =>
       BAR.HOME.map(({ label, ...rest }: IIconList) => (
         <IconButton
           key={label}
-          onPress={label === 'cart' ? handleNavigateToCart : undefined}
+          onPress={label === 'cart' ? handleNavigateToCart : handleNavigateToWishlist}
           {...rest}
         />
       )),
-    [handleNavigateToCart]
+    [handleNavigateToCart, handleNavigateToWishlist]
   )
 
   return (
