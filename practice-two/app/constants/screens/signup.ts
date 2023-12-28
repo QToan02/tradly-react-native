@@ -24,10 +24,19 @@ const INPUTS = (observePassword: string): Omit<InputProps, 'control'>[] => [
   {
     name: 'email',
     isShowError: true,
-    placeholder: 'Email/Mobile Number',
+    placeholder: 'Email',
     placeholderTextColor: COLORS.WHITE,
     rules: {
-      required: ERROR_MESSAGES.ACCOUNT.REQUIRED,
+      required: ERROR_MESSAGES.EMAIL.REQUIRED,
+    },
+  },
+  {
+    name: 'phone',
+    isShowError: true,
+    placeholder: 'Mobile Number',
+    placeholderTextColor: COLORS.WHITE,
+    rules: {
+      required: ERROR_MESSAGES.PHONE.REQUIRED,
     },
   },
   {

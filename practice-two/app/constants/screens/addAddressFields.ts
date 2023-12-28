@@ -29,6 +29,14 @@ const ADDRESS_FORM_FIELDS: TAddressFormFields[] = [
   },
   {
     id: '4',
+    label: 'City',
+    name: 'city',
+    rules: {
+      required: 'Please enter city',
+    },
+  },
+  {
+    id: '5',
     label: 'State',
     name: 'state',
     rules: {
@@ -36,7 +44,7 @@ const ADDRESS_FORM_FIELDS: TAddressFormFields[] = [
     },
   },
   {
-    id: '5',
+    id: '6',
     label: 'Zipcode',
     name: 'zipCode',
     rules: {

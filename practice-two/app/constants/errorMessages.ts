@@ -2,6 +2,12 @@ const ERROR_MESSAGES = {
   ACCOUNT: {
     REQUIRED: 'Enter email or mobile number',
   },
+  EMAIL: {
+    REQUIRED: 'Email is required',
+  },
+  PHONE: {
+    REQUIRED: 'Phone is required',
+  },
   PASSWORD: {
     REQUIRED: 'Password is required',
     MIN_LENGTH: 'Password too short',
