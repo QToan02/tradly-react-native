@@ -45,7 +45,7 @@ const Input = forwardRef<TextInput, InputProps>(
           onBlur={handleBlurInput}
           {...rest}
         />
-        {isShowError && <ErrorMessage pos="absolute" bottom={-20} error={errors[name]} />}
+        {isShowError && <ErrorMessage pos="absolute" bottom={-20} left={10} error={errors[name]} />}
       </Stack>
     )
   }
