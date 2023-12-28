@@ -54,7 +54,7 @@ const App = () => {
     prefixes: [ExpoLinking.createURL('/')],
     config: {
       screens: {
-        HomeTab: {
+        HomeStack: {
           path: 'home',
           screens: {
             OrderDetail: 'orders/:id',
