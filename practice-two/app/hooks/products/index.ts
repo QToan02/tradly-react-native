@@ -1,88 +1,63 @@
-import {
-  UseMutationResult,
-  UseQueryResult,
-  useMutation,
-  useQueries,
-  useQuery,
-} from '@tanstack/react-query'
+import { ToastAndroid } from 'react-native'
+import { UseMutationResult, UseQueryResult, useMutation, useQuery } from '@tanstack/react-query'
 import * as Notifications from 'expo-notifications'
 import * as ExpoLinking from 'expo-linking'
+import QueryString from 'qs'
+import { AxiosError } from 'axios'
 
 import { add, find, get } from '@services'
-import { ICart, IOrder, IProduct } from '@types'
+import { IOrder, IOrderReturn, IPaginationProduct, IProduct, IReturnError } from '@types'
 import { useCartStore } from '@stores'
 
-export const useGetProducts = (path: string): UseQueryResult<IProduct[], Error> => {
-  return useQuery<IProduct[], Error, IProduct[], string[]>({
+export const useGetProducts = (
+  path: string
+): UseQueryResult<IPaginationProduct, AxiosError<IReturnError>> => {
+  return useQuery<IPaginationProduct, AxiosError<IReturnError>, IPaginationProduct, string[]>({
     queryKey: ['products'],
     queryFn: () =>
-      get(path, {
+      get<IPaginationProduct>(path, {
         params: {
           _expand: ['store', 'category'],
         },
+        paramsSerializer: (params) => QueryString.stringify(params, { arrayFormat: 'repeat' }),
       }),
   })
 }
 
-export const useFindProduct = (path: string, id: string): UseQueryResult<IProduct, Error> => {
-  return useQuery<IProduct, Error, IProduct, string[]>({
+export const useFindProduct = (
+  path: string,
+  id: string
+): UseQueryResult<IProduct, AxiosError<IReturnError>> => {
+  return useQuery<IProduct, AxiosError<IReturnError>, IProduct, string[]>({
     queryKey: ['products', id],
     queryFn: () =>
-      find(`${path}/${id}`, {
+      find<IProduct>(`${path}/${id}`, {
         params: {
           _expand: ['store', 'category'],
         },
+        paramsSerializer: (params) => QueryString.stringify(params, { arrayFormat: 'repeat' }),
       }),
   })
-}
-
-export const useFindMultiProduct = (
-  path: string,
-  productId: number[],
-  quantity: number[]
-): Partial<ICart>[] => {
-  const queryFindFn = (id: string) =>
-    find<IProduct>(`${path}/${id}`, {
-      params: {
-        _expand: ['store', 'category'],
-      },
-    })
-
-  const productQueries = useQueries<IProduct[], Array<UseQueryResult<IProduct, Error>>>({
-    queries: productId.map((id) => ({
-      queryKey: ['orders', id],
-      queryFn: () => queryFindFn(String(id)),
-    })),
-  })
-
-  const cartItems: Partial<ICart>[] = productQueries.map(
-    ({ data, isSuccess }: UseQueryResult<IProduct, Error>, index: number) => {
-      if (!isSuccess) return {}
-      const { id, img, name, price, discountPrice }: IProduct = data
-
-      return { id, img, name, price, discountPrice, quantity: quantity[index] }
-    }
-  )
-
-  return cartItems
 }
 
 export const useOrderProduct = (
   path: string
-): UseMutationResult<IOrder, Error, Omit<IOrder, 'id' | 'orderStateId'>, unknown> => {
+): UseMutationResult<IOrder, AxiosError<IReturnError>, Omit<IOrder, '_id'>, unknown> => {
   const clearCart = useCartStore((state) => state.clear)
 
-  return useMutation<IOrder, Error, Omit<IOrder, 'id' | 'orderStateId'>, unknown>({
-    mutationFn: (data: Omit<IOrder, 'id' | 'orderStateId'>): Promise<IOrder> =>
-      add<IOrder>(path, { ...data, orderStateId: 1 }),
+  return useMutation<IOrder, AxiosError<IReturnError>, Omit<IOrder, '_id'>, unknown>({
+    mutationFn: (data: Omit<IOrder, '_id'>): Promise<IOrder> => add<IOrder>(path, { ...data }),
+    onError: (error: AxiosError<IReturnError>) => {
+      ToastAndroid.show(String(error.response?.data.message), ToastAndroid.LONG)
+    },
     onSuccess: (data: IOrder) => {
       clearCart()
       Notifications.scheduleNotificationAsync({
         content: {
           title: 'Order successfully',
-          body: `Order #${data.id} is being processed by store`,
+          body: `Order #${data._id} is being processed by store`,
           data: {
-            redirect: `${ExpoLinking.createURL('/')}home/orders/${data.id}`,
+            redirect: `${ExpoLinking.createURL('/')}home/orders/${data._id}`,
           },
         },
         trigger: null,
@@ -91,9 +66,22 @@ export const useOrderProduct = (
   })
 }
 
-export const useGetOderDetail = (path: string, id: string): UseQueryResult<IOrder, Error> => {
-  return useQuery<IOrder, Error>({
+export const useGetOderDetail = (path: string, id: string): UseQueryResult<IOrderReturn, Error> => {
+  return useQuery<IOrderReturn, Error>({
     queryKey: ['orders', id],
-    queryFn: () => find<IOrder>(`${path}/${id}`),
+    queryFn: () => find<IOrderReturn>(`${path}/${id}`),
+  })
+}
+
+export const useGetAllOrders = (
+  path: string,
+  id: string
+): UseQueryResult<IOrderReturn<string>[], Error> => {
+  return useQuery<IOrderReturn<string>[], Error>({
+    queryKey: ['orders'],
+    queryFn: () =>
+      get<IOrderReturn<string>[]>(`${path}`, {
+        params: { user: id },
+      }),
   })
 }
