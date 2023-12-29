@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import isEqual from 'react-fast-compare'
 import { Image, ImageBackgroundProps } from 'react-native'
 import { Stack, StackProps, Tokens, YStack } from 'tamagui'
@@ -14,7 +14,8 @@ export type StoreCardProps = StackProps &
     bgImage: ImageBackgroundProps['source']
     btnTitle: string
     size?: keyof Tokens['avatar']
-    onPressBtn?: () => void
+    _id?: string
+    onPressBtn?: (storeId: string) => void
   }
 
 const StoreCard = ({
@@ -24,8 +25,16 @@ const StoreCard = ({
   size = 'xl',
   btnTitle,
   onPressBtn,
+  _id,
   ...rest
 }: StoreCardProps) => {
+  const handlePressBtn = useCallback(() => {
+    if (!_id) return undefined
+    if (!onPressBtn) return undefined
+
+    return onPressBtn(_id)
+  }, [_id, onPressBtn])
+
   return (
     <Stack
       alignSelf="baseline"
@@ -45,7 +54,7 @@ const StoreCard = ({
           paddingVertical={4}
           fontSize={10}
           title={btnTitle}
-          onPress={onPressBtn}
+          onPress={handlePressBtn}
         />
       </YStack>
     </Stack>
