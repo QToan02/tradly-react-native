@@ -1,4 +1,14 @@
+export type TCategoryName =
+  | 'beverages'
+  | 'bread & bakery'
+  | 'vegetables'
+  | 'fruit'
+  | 'egg'
+  | 'frozen veg'
+  | 'homecare'
+  | 'pet care'
+
 export interface ICategory {
-  id: string
-  name: string
+  _id: string
+  name: TCategoryName
 }

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Image, KeyboardAvoidingView } from 'react-native'
 import { ScrollView, YStack } from 'tamagui'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -9,16 +9,24 @@ import { Input, Paragraph, TabBar } from '@components'
 import { IForm, IStoreForms } from '@types'
 import { CREATE_STORE_FIELDS } from '@constants'
 import { TStoreFields } from '@constants/screens/createStoreFields'
+import { useAuthStore } from '@stores'
+import { useAddStore } from '@hooks'
 
 import styles from './styles'
 
 export type CreateStoreScreenProps = NativeStackScreenProps<RootStackParamList, 'CreateStore'>
 
 const CreateStore = () => {
+  const user = useAuthStore((state) => state.user)
+  const { mutate: createStore, status } = useAddStore('api/store')
   const { control, handleSubmit, formState } = useForm<IForm>()
-  const handleCreateStore = (data: IStoreForms) => {
-    console.log(data)
-  }
+  const handleCreateStore = useCallback((data: IStoreForms) => {
+    createStore({
+      ...data,
+      user: String(user?._id),
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const HeaderView = useMemo(
     () => (
       <YStack marginVertical="$space.5" alignItems="center" space="$space.5">
@@ -58,7 +66,9 @@ const CreateStore = () => {
       <TabBar
         title="Create"
         onPress={handleSubmit(handleCreateStore)}
-        isDisable={!formState.isDirty || !!Object.keys(formState.errors).length}
+        isDisable={
+          !formState.isDirty || !!Object.keys(formState.errors).length || status === 'pending'
+        }
       />
     </>
   )

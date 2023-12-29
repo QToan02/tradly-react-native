@@ -10,11 +10,11 @@ import { RootStackParamList } from '@navigation/Stack'
 import { TabParamsList } from '@navigation/Tab'
 import { Button, Heading, MenuCard, ProductCard, SliderItem, StoreCard } from '@components'
 import { DASHBOARD } from '@constants'
-import { ICategoryItem, ISliderItem } from '@constants/screens/dashboard'
-import { renderItem } from '@utils'
-import { useGetProducts, useGetStores } from '@hooks'
-import { IProduct, IStore } from '@types'
-import { useCacheStore } from '@stores'
+import { ISliderItem } from '@constants/screens/dashboard'
+import { getImageCategory, renderItem } from '@utils'
+import { useGetCategories, useGetProducts, useGetStores } from '@hooks'
+import { ICategory, IProduct, IStore } from '@types'
+import { useAuthStore, useCacheStore, useCommonStore } from '@stores'
 
 import styles from './styles'
 
@@ -24,29 +24,42 @@ export type HomeScreenProps = CompositeScreenProps<
 >
 
 const Dashboard = ({ navigation }: HomeScreenProps) => {
+  const authUser = useAuthStore((state) => state.user)
+  const [setStoreId, setCategory] = useCommonStore(
+    useShallow((state) => [state.setStoreId, state.setCategory])
+  )
   const [cacheProducts, setProducts, cacheStores, setStores] = useCacheStore(
     useShallow((state) => [state.products, state.setProducts, state.stores, state.setStores])
   )
-  // const { data: products } = useGetProducts(process.env.PRODUCT_ENDPOINT)
   const { data: paginationProducts } = useGetProducts('/api/products')
-  // const { data: stores } = useGetStores(process.env.STORE_ENDPOINT)
   const { data: stores } = useGetStores('/api/stores')
+  const { data: categories, isSuccess: getCategorySuccess } = useGetCategories('api/categories')
   useEffect(() => {
     if (!paginationProducts) return
     if (!stores) return
+
+    setStoreId(stores.find(({ user }: IStore) => String(authUser?._id) === user)?._id || '')
     setProducts(paginationProducts.products)
     setStores(stores)
+
+    if (!getCategorySuccess) return
+    setCategory(categories)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationProducts, stores])
-  const handleSeeAllProducts = useCallback(() => undefined, []) // TODO: Replacing with navigate to another screen
-  const handleMoveToCategoryScreen = useCallback(({ id, name }: ICategoryItem) => {
-    // navigation.navigate('CategoryDetail', { id, name })
-    navigation.navigate('HomeStack', { screen: 'CategoryDetail', params: { id, name } })
+  }, [categories, getCategorySuccess, paginationProducts, stores])
+  const handleSeeAllProducts = useCallback(() => {
+    navigation.navigate('BrowseTab')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const handleMoveToCategoryScreen = useCallback((id: string) => {
+    navigation.navigate('HomeStack', { screen: 'CategoryDetail', params: { id } })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleMoveToProduct = useCallback((id: string) => {
-    // navigation.navigate('ProductDetail', { id })
     navigation.navigate('HomeStack', { screen: 'ProductDetail', params: { id } })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const handleMoveToStoreDetail = useCallback((id: string) => {
+    navigation.navigate('StoreStack', { screen: 'StoreProfile', params: { id } })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const renderProductItem: ListRenderItem<IProduct> = useCallback(
@@ -108,17 +121,31 @@ const Dashboard = ({ navigation }: HomeScreenProps) => {
       </>
     )
   }
-  const renderStoreItem: ListRenderItem<IStore> = ({ item: { avatar, name } }) => (
+  const renderStoreItem: ListRenderItem<IStore> = ({ item: { _id, avatar, name } }) => (
     <StoreCard
+      _id={_id}
       bgImage={require('@assets/store/tradly.png')}
       source={{ uri: avatar }}
       name={`${name} store`}
       btnTitle="follow"
+      onPressBtn={handleMoveToStoreDetail}
+    />
+  )
+  const renderCategoryItem: ListRenderItem<ICategory> = ({ item: { _id, name } }) => (
+    <MenuCard
+      _id={_id}
+      name={name}
+      source={getImageCategory(name)}
+      onPress={handleMoveToCategoryScreen}
     />
   )
 
   return (
-    <ScrollView flex={1} backgroundColor="$color.white">
+    <ScrollView
+      flex={1}
+      backgroundColor="$color.white"
+      contentContainerStyle={{ paddingBottom: 20 }}
+    >
       <FlatList
         keyExtractor={({ id }: ISliderItem): string => id}
         data={DASHBOARD.SLIDER_DATA}
@@ -128,17 +155,26 @@ const Dashboard = ({ navigation }: HomeScreenProps) => {
         contentContainerStyle={styles.sliderItem}
       />
       <FlatList
-        keyExtractor={({ id }: ICategoryItem): string => id}
-        data={DASHBOARD.CATEGORY_DATA}
-        renderItem={renderItem(MenuCard, handleMoveToCategoryScreen)}
+        keyExtractor={({ _id }: ICategory): string => _id}
+        data={categories}
+        renderItem={renderCategoryItem}
         numColumns={4}
+        contentContainerStyle={styles.categories}
         columnWrapperStyle={styles.menuItem}
         scrollEnabled={false}
       />
       <YStack marginVertical="$space.3">
         <>
           {renderProducts('New Product', paginationProducts?.products || cacheProducts)}
-          {renderProducts('Popular Product', paginationProducts?.products || cacheProducts)}
+          {renderProducts(
+            'Popular Product',
+            (Array.from(
+              JSON.parse(JSON.stringify(paginationProducts?.products || []))
+            ).reverse() as IProduct<object>[]) ||
+              (Array.from(
+                JSON.parse(JSON.stringify(cacheProducts || []))
+              ).reverse() as IProduct<object>[])
+          )}
         </>
       </YStack>
       <YStack>

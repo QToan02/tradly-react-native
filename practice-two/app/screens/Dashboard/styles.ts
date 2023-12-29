@@ -9,7 +9,9 @@ const styles = StyleSheet.create({
     columnGap: 14,
   },
   menuItem: {
-    margin: 0.5,
+    gap: 1,
+  },
+  categories: {
     gap: 0.5,
   },
   productItem: {

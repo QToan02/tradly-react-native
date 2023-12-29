@@ -29,7 +29,7 @@ type PublicStackParamsList = {
 
 type HomeStackParamsList = {
   Home: undefined
-  CategoryDetail: { id: string; name: string } // ID of the corresponding category
+  CategoryDetail: { id: string } // ID of the corresponding category
   ProductDetail: { id: string } // ID of the product
   Cart: undefined
   AddAddress: undefined
@@ -41,6 +41,7 @@ type HomeStackParamsList = {
 
 type BrowseStackParamsList = {
   Browse: { search: string } | undefined
+  ProductDetail: { id: string }
   Cart: undefined
   AddAddress: undefined
   AddCard: undefined
@@ -51,7 +52,7 @@ type BrowseStackParamsList = {
 
 type StoreStackParamsList = {
   Store: undefined
-  StoreProfile: undefined
+  StoreProfile: { id: string }
   CreateStore: undefined
   AddProduct: { id: string } | undefined // Provide ID in the modify mode
   Cart: undefined
@@ -89,21 +90,6 @@ export type RootStackParamList = {
   StoreStack: NavigatorScreenParams<StoreStackParamsList>
   OrderHistoryStack: NavigatorScreenParams<OrderHistoryStackParamsList>
   ProfileStack: NavigatorScreenParams<ProfileStackParamsList>
-  // Home: undefined
-  // Browse: { search: string } | undefined // Search keyword
-  // Onboarding: undefined
-  // Login: undefined
-  // SignUp: undefined
-  // CategoryDetail: { id: string; name: string } // ID of the corresponding category
-  // ProductDetail: { id: string } // ID of the product
-  // Wishlist: { id: string } // ID of the current login user
-  // Cart: undefined
-  // AddAddress: undefined
-  // AddCard: undefined
-  // Payment: undefined
-  // OrderDetail: { id: string } // ID of the order
-  // Store: undefined
-  // CreateStore: undefined
 } & PublicStackParamsList &
   HomeStackParamsList &
   BrowseStackParamsList &
@@ -175,7 +161,12 @@ const HomeStack = () => (
   </Stack.Navigator>
 )
 
-const BrowseStack = () => <Stack.Navigator>{TabBarStack}</Stack.Navigator>
+const BrowseStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
+    {TabBarStack}
+  </Stack.Navigator>
+)
 
 const StoreStack = () => (
   <Stack.Navigator
