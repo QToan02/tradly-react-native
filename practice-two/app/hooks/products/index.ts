@@ -3,10 +3,10 @@ import { UseMutationResult, UseQueryResult, useMutation, useQuery } from '@tanst
 import * as Notifications from 'expo-notifications'
 import * as ExpoLinking from 'expo-linking'
 import QueryString from 'qs'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosRequestConfig } from 'axios'
 
 import { add, find, get } from '@services'
-import { IOrder, IOrderReturn, IPaginationProduct, IProduct, IReturnError } from '@types'
+import { ICategory, IOrder, IOrderReturn, IPaginationProduct, IProduct, IReturnError } from '@types'
 import { useCartStore } from '@stores'
 
 export const useGetProducts = (
@@ -82,6 +82,50 @@ export const useGetAllOrders = (
     queryFn: () =>
       get<IOrderReturn<string>[]>(`${path}`, {
         params: { user: id },
+      }),
+  })
+}
+
+export const useGetCategories = (
+  path: string,
+  optional: AxiosRequestConfig = {}
+): UseQueryResult<ICategory[], Error> => {
+  return useQuery<ICategory[], Error, ICategory[], string[]>({
+    queryKey: ['categories'],
+    queryFn: () => get<ICategory[]>(path, optional),
+  })
+}
+
+export const useGetProductsByCategory = (
+  path: string,
+  categoryId: string
+): UseQueryResult<IPaginationProduct, AxiosError<IReturnError>> => {
+  return useQuery<IPaginationProduct, AxiosError<IReturnError>, IPaginationProduct, string[]>({
+    queryKey: ['products', 'category', String(categoryId)],
+    queryFn: () =>
+      get<IPaginationProduct>(path, {
+        params: {
+          _expand: ['store', 'category'],
+          category: categoryId,
+        },
+        paramsSerializer: (params) => QueryString.stringify(params, { arrayFormat: 'repeat' }),
+      }),
+  })
+}
+
+export const useSearchProduct = (
+  path: string,
+  search: string
+): UseQueryResult<IPaginationProduct, AxiosError<IReturnError>> => {
+  return useQuery<IPaginationProduct, AxiosError<IReturnError>, IPaginationProduct, string[]>({
+    enabled: !!search.length,
+    queryKey: ['products'],
+    queryFn: () =>
+      get<IPaginationProduct>(path, {
+        params: {
+          _expand: ['store', 'category'],
+        },
+        paramsSerializer: (params) => QueryString.stringify(params, { arrayFormat: 'repeat' }),
       }),
   })
 }
