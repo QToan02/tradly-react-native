@@ -25,17 +25,19 @@ const Avatar = ({ source, name, size = 'sm', ...rest }: AvatarProps) => {
   )
 
   return (
-    <StyledStack space={10} {...rest}>
+    <StyledStack space="$space.2" {...rest}>
       <Circle>
         <StyledImage source={source} style={imageStyle} accessibilityLabel={`${name}-avatar`} />
       </Circle>
       <Paragraph
+        content={name}
         numberOfLines={1}
-        color="$color.gray_50"
+        textAlign="center"
+        color="$color.gray_50_alpha_50"
         textTransform="capitalize"
+        fontSize="$1"
         lineHeight="$3"
         fontWeight="$2"
-        content={name}
       />
     </StyledStack>
   )
