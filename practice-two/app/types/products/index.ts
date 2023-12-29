@@ -68,15 +68,16 @@ export interface IOrderReturn<TPopulate = object>
   updatedAt: string
 }
 
-export interface IAddProductForm {
-  productName: string
-  productImg: string
-  categoryProduct: string
+export interface IAddProductForm<T = unknown> {
+  name: string
+  img: string
   price: number
-  offerPrice: number
-  locationDetails: string
-  productDescription: string
+  discountPrice: number
+  store: T extends object ? IStore : string
+  category: T extends object ? IStore : string
+  description: string
   condition: string
+  location: string
   priceType: string
-  additionalDetails: string
+  delivery: string
 }
