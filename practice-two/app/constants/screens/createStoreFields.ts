@@ -8,39 +8,30 @@ const CREATE_STORE_FIELDS: TStoreFields[] = [
   {
     id: '1',
     label: 'Store Name',
-    name: 'storeName',
+    name: 'name',
     rules: {
       required: 'Please enter name for your store',
     },
   },
   {
     id: '2',
-    label: 'Store Web Address',
-    name: 'storeWebAddress',
-    rules: {
-      required: 'Please provide store web address',
-    },
+    label: 'Store Avatar',
+    name: 'avatar',
   },
   {
     id: '3',
     label: 'Store Description',
-    name: 'storeDescription',
+    name: 'description',
   },
   {
     id: '4',
     label: 'Store Type',
-    name: 'storeType',
-    rules: {
-      required: 'Please provide the type of store',
-    },
+    name: 'type',
   },
   {
     id: '5',
     label: 'Address',
     name: 'address',
-    rules: {
-      required: 'Please add address for store',
-    },
   },
   {
     id: '6',
