@@ -1,13 +1,16 @@
 import { useCallback, useMemo } from 'react'
 import { NativeStackHeaderProps } from '@react-navigation/native-stack'
+import { useForm } from 'react-hook-form'
 
 import Search from '@components/Search'
 import Bar from '@components/Bar'
-import { IIconList } from '@types'
+import { IForm, IIconList } from '@types'
 import IconButton from '@components/IconButton'
 import { BAR } from '@constants'
 
 const HomeBar = ({ options, route, navigation }: NativeStackHeaderProps) => {
+  const { control, watch } = useForm<IForm>()
+  const search = watch('search')
   const handleNavigateToCart = useCallback(
     () => navigation.navigate('HomeStack', { screen: 'Cart' }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,7 +39,7 @@ const HomeBar = ({ options, route, navigation }: NativeStackHeaderProps) => {
       IconList={IconList}
       align="space-between"
     >
-      <Search placeholder="Search Product" />
+      <Search control={control} placeholder="Search Product" />
     </Bar>
   )
 }

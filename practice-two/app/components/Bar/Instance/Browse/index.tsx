@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { XStack, YStack } from 'tamagui'
 import { NativeStackHeaderProps } from '@react-navigation/native-stack'
+import { useForm } from 'react-hook-form'
 
 import { BAR } from '@constants'
 import Button, { ButtonProps } from '@components/Button'
@@ -8,11 +9,12 @@ import Search from '@components/Search'
 import IconButton from '@components/IconButton'
 
 import Bar from '@components/Bar'
-import { IIconList } from '@types'
+import { IForm, IIconList } from '@types'
 
 import styles from './styles'
 
 const BrowseBar = ({ navigation, options, route }: NativeStackHeaderProps) => {
+  const { control } = useForm<IForm>()
   const handleNavigateToCart = useCallback(
     () => navigation.navigate('BrowseStack', { screen: 'Cart' }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,7 +60,7 @@ const BrowseBar = ({ navigation, options, route }: NativeStackHeaderProps) => {
       align="space-between"
     >
       <YStack flex={1} space={28}>
-        <Search placeholder="Search Product" />
+        <Search control={control} placeholder="Search Product" />
         <XStack space={4} alignItems="center">
           {renderButton({
             title: 'sort by',

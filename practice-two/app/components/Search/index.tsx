@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react'
-import { useForm } from 'react-hook-form'
+import { Control } from 'react-hook-form'
 import { Image, TextInput } from 'react-native'
 import { Stack, XStack, getTokenValue } from 'tamagui'
 
@@ -11,10 +11,10 @@ import styles from './styles'
 
 export type SearchProps = {
   placeholder: string
+  control: Control<IForm>
 } & Omit<StyledInputProps, 'label'>
 
-const Search = ({ placeholder, ...rest }: SearchProps) => {
-  const { control } = useForm<IForm>()
+const Search = ({ control, placeholder, ...rest }: SearchProps) => {
   const searchInput = useRef<TextInput>(null)
 
   /**
