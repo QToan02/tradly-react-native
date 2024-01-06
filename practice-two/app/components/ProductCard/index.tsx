@@ -60,7 +60,7 @@ const ProductCard = ({
             numberOfLines={1}
           />
           <XStack alignItems="center" justifyContent="space-between" columnGap={4}>
-            <Avatar source={avatar} name={storeName} size="sm" space="$space.0" />
+            <Avatar source={avatar} name={storeName} size="sm" space="$space.0" maxWidth={70} />
             <XStack alignItems="center" columnGap={4}>
               {discountPrice !== 0 && (
                 <Paragraph

@@ -52,7 +52,7 @@ const OrderItem = ({
       <XStack space="$space.3.5">
         <StyledImage source={image} />
         <YStack justifyContent="center">
-          <StyledText content={name} color="$color.dark_50" />
+          <StyledText content={name} color="$color.dark_50" numberOfLines={1} maxWidth={180} />
           <XStack alignItems="baseline" columnGap="$space.1.5">
             <Paragraph
               content={`$${discountPrice ? discountPrice.toFixed(0) : price.toFixed(0)}`}
